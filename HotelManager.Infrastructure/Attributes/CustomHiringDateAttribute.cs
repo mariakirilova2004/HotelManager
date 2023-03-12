@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HotelManager.Infrastructure.Attributes
 {
-    public class CustomDismissionDateAttribute : ValidationAttribute
+    public class CustomHiringDateAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

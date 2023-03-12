@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace HotelManager.Infrastructure.Attributes
 {
-    public class CustomDismissionDateAttribute : ValidationAttribute
+    public class CustomArrivalDateAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             value = (DateTime)value;
             // This assumes inclusivity
-            if (DateTime.Now.CompareTo(value) <= 0)
+            if (DateTime.Now.CompareTo(value) >= 0)
             {
                 return ValidationResult.Success;
             }
