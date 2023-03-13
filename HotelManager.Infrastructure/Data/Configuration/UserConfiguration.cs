@@ -17,7 +17,7 @@ namespace HotelManager.Infrastructure.Data.Configuration
             builder.HasData(CreateUser());
         }
 
-        private User CreateUser()
+        private static User CreateUser()
         {
             var hasher = new PasswordHasher<User>();
 

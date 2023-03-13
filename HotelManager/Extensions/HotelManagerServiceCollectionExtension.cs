@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HotelManager.Controllers;
-using HotelManager.Core.Services;
 using HotelManager.Core.Services.User;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -11,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<ILogger, Logger<UserController>>();
             services.AddScoped<ILogger, Logger<UserService>>();
-            //services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
 
             return services;
         }

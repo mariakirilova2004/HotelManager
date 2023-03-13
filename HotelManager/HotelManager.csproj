@@ -8,9 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Areas\Identity\Pages\_ViewStart.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
-    <None Include="Views\Home\Privacy.cshtml" />
     <None Include="Views\Shared\Error.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_LoginPartial.cshtml" />
@@ -30,10 +28,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="toastr" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
   </ItemGroup>
 

@@ -17,14 +17,14 @@
                 <a  class="nav-link text-nowrap" asp-area="" asp-page="" title="">Hello, @organizationService.GetOrganizationName(User.Id())</a>
             </li>
         }*@
-        <li class="nav-item">
-            <a  class="nav-link text-nowrap" asp-area="" asp-page="" title="">Hello, @User.Identity?.Name!</a>
-        </li>
-        <li class="nav-item">
-            <form class="form-inline"  asp-area="" asp-controller="User" asp-action="Logout" asp-route-id="@UserManager.GetUserId(User)">
-                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-            </form>
-        </li>
+            <li class="nav-item">
+                <a  class="nav-link text-nowrap" title="">Hello, @User.Identity?.Name!</a>
+            </li>
+            <li class="nav-item">
+                <form class="form-inline"  asp-area="" asp-controller="User" asp-action="Logout" asp-route-id="@UserManager.GetUserId(User)">
+                    <button type="submit" class="nav-link btn btn-link">Logout</button>
+                </form>
+            </li>
     }
     else
     {

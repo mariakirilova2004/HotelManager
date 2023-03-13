@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using WeVolunteer.Core.Constants;
+using HotelManager.Core.Constants;
 
 namespace HotelManager.Controllers
 {
@@ -35,7 +35,7 @@ namespace HotelManager.Controllers
         {
             if (User?.Identity?.IsAuthenticated ?? false)
             {
-                this.logger.LogInformation("User {0} tried to login again!", this.User.Id());
+                this.logger.LogInformation($"User {this.User.Id()} tried to login again!");
                 return RedirectToAction("Index", "Home");
             }
 
@@ -51,7 +51,7 @@ namespace HotelManager.Controllers
             if (User?.Identity?.IsAuthenticated ?? false)
             {
                 TempData[MessageConstant.WarningMessage] = "You have already logged in";
-                this.logger.LogInformation("User {0} tried to login again!", this.User.Id());
+                this.logger.LogInformation($"User {this.User.Id()} tried to login again!");
                 return RedirectToAction("Index", "Home");
             }
 
@@ -61,7 +61,7 @@ namespace HotelManager.Controllers
                 return View(model);
             }
 
-            var user = userManager.Users.Where(u => u.Email == model.Email).FirstOrDefault();
+            var user = await userManager.FindByEmailAsync(model.Email);
 
             if (user != null)
             {

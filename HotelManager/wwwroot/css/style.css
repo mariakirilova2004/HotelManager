@@ -413,6 +413,11 @@
     color: var(--secondary) !important;
 }
 
+/*** Main ***/
+main{
+    display: block;
+    margin-bottom: 100px
+}
 
 /*** Footer ***/
 .newsletter {

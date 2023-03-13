@@ -20,7 +20,7 @@ builder.Services.AddResponseCaching();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<HotelManagerDbContext>();
 
@@ -59,10 +59,23 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+    name: "Areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+
+    app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
+    app.MapRazorPages();
+});
+
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
+//app.MapRazorPages();
 
 app.UseResponseCaching();
 
