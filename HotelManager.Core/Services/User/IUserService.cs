@@ -16,6 +16,6 @@ namespace HotelManager.Core.Services.User
                                       string searchTermOn = "FirstName",
                                           int currentPage = 1,
                                           int usersPerPage = 1);
-        //Task Forget(string Id);
+        Task Forget(string Id);
     }
 }

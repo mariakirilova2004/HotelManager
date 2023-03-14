@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using HotelManager.Core.Constants;
+using Ganss.Xss;
 
 namespace HotelManager.Controllers
 {

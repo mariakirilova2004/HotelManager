@@ -12,8 +12,8 @@ namespace HotelManager.Infrastructure.Attributes
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             value = (DateTime)value;
-            // This assumes inclusivity
-            if (DateTime.Now.CompareTo(value) <= 0)
+            // This assumes inclusivity, i.e. exactly six years ago is okay
+            if (DateTime.Now.AddYears(-100).CompareTo(value) <= 0 && DateTime.Now.AddYears(10).CompareTo(value) >= 0)
             {
                 return ValidationResult.Success;
             }

@@ -10,6 +10,9 @@ namespace HotelManager.Infrastructure.Data
     {
         public class User
         {
+            public const int UserMinLengthUserName = 2;
+            public const int UserMaxLengthUserName = 20;
+
             public const int UserMinLengthFirstName = 2;
             public const int UserMaxLengthFirstName = 20;
 
@@ -18,6 +21,9 @@ namespace HotelManager.Infrastructure.Data
 
             public const int UserMinLengthLastName = 2;
             public const int UserMaxLengthLastName = 20;
+
+            public const int UserMaxLengthPassword = 20;
+            public const int UserMinLengthPassword = 8;
 
             public const int UserEGNLength = 10;
 

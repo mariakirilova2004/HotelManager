@@ -1,5 +1,6 @@
 ﻿using HotelManager.Core.Models.User;
 using HotelManager.Infrastructure.Data;
+using HotelManager.Infrastructure.Data.Еntities.Account;
 
 namespace HotelManager.Core.Services.User
 {
@@ -29,6 +30,7 @@ namespace HotelManager.Core.Services.User
                 PhoneNumber = u.PhoneNumber,
                 Email = u.Email,
                 HiringDate = u.HiringDate,
+                DismissionDate = (DateTime) u.DismissionDate,
                 IsActive = u.IsActive
             }).ToList();
 
@@ -66,28 +68,25 @@ namespace HotelManager.Core.Services.User
         //    return this.repository.All<Infrastructure.Data.Entities.Account.User>(u => u.Email == email).ToList().Count > 0;
         //}
 
-        //public async Task Forget(string Id)
-        //{
-        //    try
-        //    {
-        //        var user = this.dbContext.Users.Where(u => u.Id == Id);
+        public async Task Forget(string Id)
+        {
+            try
+            {
+                Infrastructure.Data.Еntities.Account.User user = this.dbContext.Users.Where(u => u.Id == Id).FirstOrDefault();
 
-        //        for (int i = 0; i < user.Causes.Count; i++)
-        //        {
-        //            user.Causes[i].Users.Remove(user);
-        //        }
+                if(user != null)
+                {
+                    user.IsActive = false;
+                    user.DismissionDate = DateTime.Now;
+                    this.dbContext.Update(user);
+                }
 
-        //        user.Causes = new List<Infrastructure.Data.Entities.Cause>();
-
-        //        await this.repository.DeleteAsync<Infrastructure.Data.Entities.Account.User>(Id);
-
-        //        await this.repository.SaveChangesAsync();
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         //public bool IdExists(string userId)
         //{

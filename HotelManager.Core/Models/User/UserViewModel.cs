@@ -22,6 +22,7 @@ namespace HotelManager.Core.Models.User
         public string Email { get; set; }
 
         public DateTime HiringDate { get; set; }
+        public DateTime? DismissionDate { get; set; }
 
         public bool IsActive { get; set; }
     }
