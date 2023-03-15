@@ -110,7 +110,7 @@ namespace HotelManager.Areas.Admin.Controllers
 
             if (result.Succeeded)
             {
-                TempData[MessageConstant.SuccessMessage] = "Your account has been successfully registered";
+                TempData[MessageConstant.SuccessMessage] = $"{user.FirstName} account has been successfully added";
                 return RedirectToAction("All", "User");
             }
 
@@ -145,6 +145,97 @@ namespace HotelManager.Areas.Admin.Controllers
                 this.logger.LogInformation("User {0} could not be deleted!", Id);
             }
             return RedirectToAction(nameof(All));
+        }
+
+        // Update data of a user
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string Id)
+        {
+            if (!User.IsAdmin())
+            {
+                TempData[MessageConstant.WarningMessage] = "You cannot edit Users!";
+                this.logger.LogInformation("User {0} tried to edit user, but they are not Admin!", this.User.Id());
+                return RedirectToAction("All", "User");
+            }
+
+            var model = users.GetUserById(Id);
+
+            if (model == null)
+            {
+                TempData[MessageConstant.WarningMessage] = "No such User!";
+                return RedirectToAction(nameof(All));
+            }
+
+            var token = await userManager.GeneratePasswordResetTokenAsync(model);
+
+            EditUserFormModel user = new EditUserFormModel()
+            {
+                Id = model.Id,
+                UserName = model.UserName,
+                FirstName = model.FirstName,
+                MiddleName = model.MiddleName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                EGN = model.EGN,
+                Email = model.Email,
+                HiringDate = model.HiringDate,
+                DismissionDate = model.DismissionDate,
+                IsActive = model.IsActive,
+                Token = token
+            };
+
+            return View(user);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditUserFormModel model)
+        {
+            var sanitalizer = new HtmlSanitizer();
+
+            if (!ModelState.IsValid)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid edit";
+                return View(model);
+            }
+
+            if (userManager.Users.Any(u => u.Email == model.Email && u.Id != model.Id))
+            {
+                TempData[MessageConstant.ErrorMessage] = "Тhere is a user with this email";
+                return View(model);
+            }
+
+            if (userManager.Users.Any(u => u.PhoneNumber == model.PhoneNumber && u.Id != model.Id))
+            {
+                TempData[MessageConstant.ErrorMessage] = "Тhere is a user with this Phone Number";
+                return View(model);
+            }
+
+            try
+            {
+                await this.users.Edit(model);
+                if (model.Password != null)
+                {
+                    var resetPassResult = await userManager.ResetPasswordAsync(users.GetUserById(model.Id), model.Token, model.Password);
+                    if (!resetPassResult.Succeeded)
+                    {
+                        foreach (var error in resetPassResult.Errors)
+                        {
+                            ModelState.TryAddModelError(error.Code, error.Description);
+                            TempData[MessageConstant.ErrorMessage] = error.Description;
+                        }
+                        return View(model);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                this.logger.LogInformation("User {0} did not manage to be edited!", model.Id);
+                TempData[MessageConstant.ErrorMessage] = "Unsuccessful editing of a user";
+                return View(model);
+            }
+
+            return RedirectToAction("All", "User");
         }
     }
 }

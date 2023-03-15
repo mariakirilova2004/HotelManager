@@ -32,7 +32,7 @@
             }
             <div class="d-flex justify-content-between">
                 <form asp-area="Admin" asp-controller="User" asp-action="Edit" asp-route-id="@Model.Id" asp-route-information="@Model.GetInformation()" method="get">
-                    <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">Edit</a>
+                    <button type="submit" class="btn btn-sm btn-primary rounded py-2 px-4" href="">Edit</button>
                 </form>
                 @if(@Model.DismissionDate == null && @Model.Email != "admin@mail.com")
                 {

@@ -9,6 +9,8 @@ namespace HotelManager.Core.Services.User
 {
     public interface IUserService
     {
+        Infrastructure.Data.Еntities.Account.User GetUserById(string Id);
+        Task Edit(EditUserFormModel model);
         //public bool EmailExists(string email);
         //bool IdExists(string userId);
         //public bool NameExists(string name);

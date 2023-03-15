@@ -30,6 +30,8 @@
 
     <!-- Template Stylesheet -->
     <link href="~/css/style.css" rel="stylesheet">
+
+
     <title>@ViewData["Title"] - Hotelier</title>
 </head>
 <body>
@@ -41,9 +43,10 @@
     </div>
     <!-- Spinner End -->
 
+
     <!-- Header Start -->
+    <partial name="_UserMessages" />
     <div class="container-fluid bg-dark px-0">
-      <partial name="_UserMessages" />
         <div class="row gx-0">
             <div class="col-lg-3 bg-dark d-none d-lg-block">
                 <a href="index.html" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
@@ -178,6 +181,7 @@
 
     <!-- Template Javascript -->
     <script src="~/js/main.js"></script>
+    <script src="~/lib/toastr/toastr.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

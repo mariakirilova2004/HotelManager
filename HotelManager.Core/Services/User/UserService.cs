@@ -1,4 +1,5 @@
-﻿using HotelManager.Core.Models.User;
+﻿using Ganss.Xss;
+using HotelManager.Core.Models.User;
 using HotelManager.Infrastructure.Data;
 using HotelManager.Infrastructure.Data.Еntities.Account;
 
@@ -30,7 +31,7 @@ namespace HotelManager.Core.Services.User
                 PhoneNumber = u.PhoneNumber,
                 Email = u.Email,
                 HiringDate = u.HiringDate,
-                DismissionDate = (DateTime) u.DismissionDate,
+                DismissionDate = u.DismissionDate,
                 IsActive = u.IsActive
             }).ToList();
 
@@ -82,6 +83,40 @@ namespace HotelManager.Core.Services.User
                     await this.dbContext.SaveChangesAsync();
                 }
 
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public Infrastructure.Data.Еntities.Account.User GetUserById(string Id)
+        {
+            return dbContext.Users.FirstOrDefault(u => u.Id == Id);
+        }
+
+        public async Task Edit(EditUserFormModel model)
+        {
+            var sanitalizer = new HtmlSanitizer();
+
+            var user = dbContext.Users.FirstOrDefault(u => u.Id == model.Id);
+
+            user.UserName = sanitalizer.Sanitize(model.UserName);
+            user.FirstName = sanitalizer.Sanitize(model.FirstName);
+            user.MiddleName = sanitalizer.Sanitize(model.MiddleName);
+            user.LastName = sanitalizer.Sanitize(model.LastName);
+            user.EGN = sanitalizer.Sanitize(model.EGN);
+            user.Email = sanitalizer.Sanitize(model.Email);
+            user.PhoneNumber = sanitalizer.Sanitize(model.PhoneNumber);
+            user.HiringDate = model.HiringDate;
+            user.IsActive = model.IsActive;
+            user.DismissionDate = model.DismissionDate;
+
+            dbContext.Users.Update(user);
+
+            try
+            {
+                await dbContext.SaveChangesAsync();
             }
             catch (Exception)
             {

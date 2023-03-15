@@ -9,7 +9,7 @@ using static HotelManager.Infrastructure.Data.DataConstants.User;
 
 namespace HotelManager.Core.Models.User
 {
-    public class AddUserFormModel
+    public class EditUserFormModel
     {
         public string Id { get; set; }
 
@@ -42,16 +42,23 @@ namespace HotelManager.Core.Models.User
         public string Email { get; set; }
 
         [Required]
+        public bool IsActive { get; set; }
+
+        [Required]
         [CustomHiringDate(ErrorMessage = "Enter valid Hiring date")]
         public DateTime HiringDate { get; set; }
 
-        [Required]
+        [CustomDismissionDate(ErrorMessage = "Enter valid Dissmision date")]
+        public DateTime? DismissionDate { get; set; }
+
         [StringLength(UserMaxLengthPassword, ErrorMessage = "Must be between {2} and {1} characters long.", MinimumLength = UserMinLengthPassword)]
         [DataType(DataType.Password)]
-        public string Password { get; set; } 
+        public string? Password { get; set; }
 
         [Compare(nameof(Password))]
         [DataType(DataType.Password)]
-        public string ConfirmPassword { get; set; } 
+        public string? ConfirmPassword { get; set; }
+
+        public string? Token { get; set; }
     }
 }

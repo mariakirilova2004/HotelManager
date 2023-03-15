@@ -28,7 +28,8 @@ builder.Services.AddDefaultIdentity<User>(options => {
     options.Password.RequireUppercase = false; ;
 })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<HotelManagerDbContext>();
+    .AddEntityFrameworkStores<HotelManagerDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews()
 .AddMvcOptions(options =>
@@ -41,6 +42,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/User/Login";
     options.LogoutPath = "/User/Logout";
 });
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
+   opt.TokenLifespan = TimeSpan.FromHours(2));
 
 var app = builder.Build();
 app.SeedAdmin();

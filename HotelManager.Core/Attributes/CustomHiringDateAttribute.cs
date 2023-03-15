@@ -13,7 +13,7 @@ namespace HotelManager.Core.Attributes
         {
             value = (DateTime)value;
             // This assumes inclusivity
-            if (DateTime.Now.CompareTo(value) <= 0)
+            if ((DateTime.Now.AddYears(-100).CompareTo(value) <= 0 && DateTime.Now.AddYears(10).CompareTo(value) >= 0) || value == null)
             {
                 return ValidationResult.Success;
             }
