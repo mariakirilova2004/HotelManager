@@ -127,6 +127,13 @@ namespace HotelManager.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Forget(string Id)
         {
+            if (!User.IsAdmin())
+            {
+                TempData[MessageConstant.WarningMessage] = "You cannot delete Users!";
+                this.logger.LogInformation("User {0} tried to delete user, but they are not Admin!", this.User.Id());
+                return RedirectToAction("Index", "Home");
+            }
+
             try
             {
                 await this.users.Forget(Id);

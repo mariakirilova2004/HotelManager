@@ -79,6 +79,7 @@ namespace HotelManager.Core.Services.User
                     user.IsActive = false;
                     user.DismissionDate = DateTime.Now;
                     this.dbContext.Update(user);
+                    await this.dbContext.SaveChangesAsync();
                 }
 
             }
