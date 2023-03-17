@@ -11,7 +11,6 @@ namespace HotelManager.Core.Models.User
 {
     public class AddUserFormModel
     {
-        public string Id { get; set; }
 
         [Required]
         [StringLengthAttribute(UserMaxLengthUserName, MinimumLength = UserMinLengthUserName)]

@@ -1,4 +1,5 @@
-﻿using HotelManager.Core.Models.User;
+﻿using HotelManager.Core.Models.Room;
+using HotelManager.Core.Models.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,11 @@ namespace HotelManager.Core.Extensions
         {
             var name = string.Join("-", new List<string> { fn, mn, ln });
             return name;
+        }
+
+        public static string GetInformation(this RoomViewModel room)
+        {
+            return room.Capacity + "_" + room.Number + "_" + room.RoomType;
         }
     }
 }

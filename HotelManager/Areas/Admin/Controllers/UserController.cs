@@ -62,7 +62,7 @@ namespace HotelManager.Areas.Admin.Controllers
             {
                 TempData[MessageConstant.WarningMessage] = "You cannot add Users!";
                 this.logger.LogInformation("User {0} tried to add user, but they are not Admin!", this.User.Id());
-                return RedirectToAction("All", "User");
+                return RedirectToAction("Index", "Home");
             }
             var model = new AddUserFormModel();
 

@@ -6,6 +6,8 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
     <!-- Favicon -->
     <link href="~/img/favicon.ico" rel="icon">
@@ -23,14 +25,14 @@
     <link href="~/lib/animate/animate.min.css" rel="stylesheet">
     <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="~/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="~/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
     <link href="~/css/style.css" rel="stylesheet">
 
     <link href="~/lib/toastr/toastr.min.css" rel="stylesheet">
-
+    
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
 
     <title>@ViewData["Title"] - Hotelier</title>
 </head>
@@ -86,16 +88,16 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a href="index.html" class="nav-item nav-link active">Home</a>
                             <a href="about.html" class="nav-item nav-link">About</a>
-                            <a href="service.html" class="nav-item nav-link">Services</a>
-                            <a href="room.html" class="nav-item nav-link">Rooms</a>
-                            <div class="nav-item dropdown">
+                            <a asp-controller="Reservation" asp-action="All" class="nav-item nav-link">Reservations</a>
+                            <a asp-controller="Room" asp-action="All" class="nav-item nav-link">Rooms</a>
+@*                            <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                                 <div class="dropdown-menu rounded-0 m-0">
                                     <a href="booking.html" class="dropdown-item">Booking</a>
                                     <a href="team.html" class="dropdown-item">Our Team</a>
-                                    <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                                    
                                 </div>
-                            </div>
+                            </div>*@
                             <a href="contact.html" class="nav-item nav-link">Contact</a>
                         </div>
 @*                        <a class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block" asp-controller="User" asp-action="Login">Login<i class="fa fa-arrow-right ms-3"></i></a>

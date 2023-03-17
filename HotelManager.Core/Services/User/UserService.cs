@@ -50,9 +50,9 @@ namespace HotelManager.Core.Services.User
                     case "Email": usersQuery = usersQuery.Where(u => u.Email.ToLower().Contains(searchTerm.ToLower())).ToList();
                         break;
                 }
-
-                usersQuery.OrderByDescending(c => c.Id).ToList();
             }
+
+            usersQuery = usersQuery.OrderByDescending(c => c.HiringDate).ToList();
 
             var totalUsers = usersQuery.Count();
 

@@ -1,7 +1,7 @@
-﻿@model EditUserFormModel
+﻿@model AddUserFormModel
 
 @{
-    ViewData["Title"] = $"Edit {@Model.FirstName} {@Model.LastName} Profile";
+    ViewData["Title"] = "Add New User";
 }
 
 <!-- Booking Start -->
@@ -27,105 +27,81 @@
             <div class="col-lg-6">
                 <div class="wow @*fadeInUp*@" data-wow-delay="0.2s">
                     <h6 class="section-title text-center text-primary text-uppercase">@ViewData["Title"]</h6>
-                    <h1 class="mb-5">Start <span class="text-primary text-uppercase"> Exploring</span></h1>
+                <h1 class="mb-5">Start <span class="text-primary text-uppercase"> Exploring</span></h1>
                     <form method="post">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="username" value="@Model.UserName" class="form-control" id="username" autocomplete="username" aria-required="true" placeholder="Username" asp-for="@Model.UserName">
+                                    <input type="username" class="form-control" id="username" autocomplete="username" aria-required="true" placeholder="Username" asp-for="@Model.UserName">
                                     <label for="username">Username</label>
                                     <span asp-validation-for="@Model.UserName" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" value="@Model.FirstName" class="form-control" id="firstname" autocomplete="firstname" aria-required="true" placeholder="First Name" asp-for="@Model.FirstName">
+                                    <input type="text" class="form-control" id="firstname" autocomplete="firstname" aria-required="true" placeholder="First Name" asp-for="@Model.FirstName">
                                     <label for="secondname">First Name</label>
                                     <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" value="@Model.MiddleName" class="form-control" id="middlename" autocomplete="middlename" aria-required="true" placeholder="Middle Name" asp-for="@Model.MiddleName">
+                                    <input type="text" class="form-control" id="middlename" autocomplete="middlename" aria-required="true" placeholder="Middle Name" asp-for="@Model.MiddleName">
                                     <label for="middlename">Middle Name</label>
                                     <span asp-validation-for="@Model.MiddleName" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" value="@Model.LastName" class="form-control" id="lastname" autocomplete="lastname" aria-required="true" placeholder="Last Name" asp-for="@Model.LastName">
+                                    <input type="text" class="form-control" id="lastname" autocomplete="lastname" aria-required="true" placeholder="Last Name" asp-for="@Model.LastName">
                                     <label for="lastname">Last Name</label>
                                     <span asp-validation-for="@Model.LastName" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" value="@Model.EGN" class="form-control" id="egn" autocomplete="egn" aria-required="true" placeholder="EGN" asp-for="@Model.EGN">
+                                    <input type="text" class="form-control" id="egn" autocomplete="egn" aria-required="true" placeholder="EGN" asp-for="@Model.EGN">
                                     <label for="egn">EGN</label>
                                     <span asp-validation-for="@Model.EGN" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" value="@Model.PhoneNumber" class="form-control" id="phonenumber" autocomplete="phonenumber" aria-required="true" placeholder="Phone Number" asp-for="@Model.PhoneNumber">
+                                    <input type="text" class="form-control" id="phonenumber" autocomplete="phonenumber" aria-required="true" placeholder="Phone Number" asp-for="@Model.PhoneNumber">
                                     <label for="phonenumber">Phone Number</label>
                                     <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="email" value="@Model.Email" class="form-control" id="email" autocomplete="email" aria-required="true" placeholder="Email" asp-for="@Model.Email">
+                                    <input type="email" class="form-control" id="email" autocomplete="email" aria-required="true" placeholder="Email" asp-for="@Model.Email">
                                     <label for="email">Email</label>
                                     <span asp-validation-for="@Model.Email" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input asp-format="{0:yyyy-MM-ddTHH:mm}" class="form-control" id="hiringdate" autocomplete="hiringdate" aria-required="true" asp-for="@Model.HiringDate">
+                                    <input type="date" value="01/01/2023" class="form-control" id="hiringdate" autocomplete="hiringdate" aria-required="true" placeholder="Hiring Date" asp-for="@Model.HiringDate">
                                     <label for="hiringdate">Hiring Date</label>
                                     <span asp-validation-for="@Model.HiringDate" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input asp-format="{0:yyyy-MM-ddTHH:mm}" class="form-control" id="dissmisiondate" autocomplete="dissmisiondate" aria-required="false" asp-for="@Model.DismissionDate">
-                                    <label for="dissmisiondate">Dismission Date</label>
-                                    <span asp-validation-for="@Model.DismissionDate" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">                              
-                                    @if (!Model.IsActive)
-                                    {
-                                        <input type="checkbox" name="IsActive" asp-for="@Model.IsActive" value="false" style="height: 40px; width: 40px" />
-                                    }
-                                    else
-                                    {
-                                        <input type="checkbox" name="IsActive" asp-for="@Model.IsActive" value="true" style="height: 40px; width: 40px" />
-                                    }
-                                    <label style="margin-left: 40px" for="isactive">Is Active User</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="password" value="@Model.Password" class="form-control" id="password" autocomplete="password" aria-required="false" placeholder="Password" asp-for="@Model.Password">
-                                    <label for="password">Change Password</label>
+                                    <input type="password" class="form-control" id="password" autocomplete="password" aria-required="true" placeholder="Password" asp-for="@Model.Password">
+                                    <label for="password">Password</label>
                                     <span asp-validation-for="@Model.Password" class="text-danger"></span>
-                                    <input type="hidden" asp-for="Token" class="form-control" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="password" value="@Model.ConfirmPassword" class="form-control" id="password" aria-required="false" placeholder="Confirm Password" asp-for="@Model.ConfirmPassword">
-                                    <label for="password">Change Confirm Password</label>
+                                    <input type="password" class="form-control" id="password" aria-required="true" placeholder="Confirm Password" asp-for="@Model.ConfirmPassword">
+                                    <label for="password">Confirm Password</label>
                                     <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <button class="btn btn-primary w-100 py-3" type="submit" asp-area="Admin" asp-controller="User" asp-action="Edit" formmethod="post">Edit</button>
-                            </div>
-                            <div class="col-md-6">
-                                <a class="btn btn-primary w-100 py-3" asp-area="Admin" asp-controller="User" asp-action="All"> Close</a>
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3" type="submit">Add</button>
                             </div>
                         </div>
                     </form>
@@ -135,6 +111,7 @@
     </div>
 </div>
 <!-- Booking End -->
+
 @section Scripts {
-<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }
