@@ -14,12 +14,14 @@ namespace HotelManager.Infrastructure.Data.Еntities
     public class Room
     {
         [Key]
+        public int Id { get; set; }
+
         [Required]
-        [MinLength(RoomMinNumber), MaxLength(RoomMaxNumber)]
+        [Range(RoomMinNumber, RoomMaxNumber)]
         public int Number { get; set; }
 
         [Required]
-        [MinLength(RoomMinCapacity), MaxLength(RoomMaxCapacity)]
+        [Range(RoomMinCapacity, RoomMaxCapacity)]
         public int Capacity { get; set; }
 
         [Required]
@@ -32,11 +34,11 @@ namespace HotelManager.Infrastructure.Data.Еntities
         public bool IsFree { get; set; }
 
         [Required]
-        [MinLength(RoomMinPriceForAdultBed), MaxLength(RoomMaxPriceForAdultBed)]
-        public int PriceForAdultBed { get; set; }
+        [Range(RoomMinPriceForAdultBed, RoomMaxPriceForAdultBed)]
+        public decimal PriceForAdultBed { get; set; }
 
         [Required]
-        [MinLength(RoomMinPriceForChildBed), MaxLength(RoomMaxPriceForChildBed)]
-        public int PriceForChildBed { get; set; }
+        [Range(RoomMinPriceForChildBed, RoomMaxPriceForChildBed)]
+        public decimal PriceForChildBed { get; set; }
     }
 }

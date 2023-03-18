@@ -21,7 +21,7 @@ namespace HotelManager.Areas.Admin.Controllers
         public RoomController(IRoomService _roomService,
                               IRoomTypeService _roomTypeService,                            
                               IMemoryCache _cache,
-                              ILogger<UserController> _logger)
+                              ILogger<RoomController> _logger)
         {
             this.roomService = _roomService;
             this.cache = _cache;
@@ -29,8 +29,8 @@ namespace HotelManager.Areas.Admin.Controllers
             this.roomTypeService = _roomTypeService;
         }
 
-        [AllowAnonymous]
-        [Route("Room/All")]
+        [Route("/AllRooms")]
+        [HttpGet]
         public IActionResult All([FromQuery] AllRoomsQueryModel query)
         {
             var roomService = this.cache.Get<AllRoomsQueryModel>("RoomsCacheKey");
@@ -64,9 +64,10 @@ namespace HotelManager.Areas.Admin.Controllers
                 this.logger.LogInformation("User {0} tried to add room, but they are not Admin!", this.User.Id());
                 return RedirectToAction("All", "Room");
             }
-            var model = new AddRoomFormModel();
-
-            model.RoomTypes = roomTypeService.All();
+            var model = new AddRoomFormModel
+            {
+                RoomTypes = roomTypeService.AllAdd()
+            };
 
             return View(model);
         }
@@ -79,12 +80,14 @@ namespace HotelManager.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 TempData[MessageConstant.ErrorMessage] = "Invalid add";
+                model.RoomTypes = roomTypeService.AllAdd();
                 return View(model);
             }
 
             if (roomService.NumberExists(model.Number))
             {
                 TempData[MessageConstant.ErrorMessage] = "Тhere is a room with this Room Number";
+                model.RoomTypes = roomTypeService.AllAdd();
                 return View(model);
             }
 
@@ -94,20 +97,12 @@ namespace HotelManager.Areas.Admin.Controllers
             }
             catch (Exception e)
             {
-                if (result.Succeeded)
-                {
-                    TempData[MessageConstant.SuccessMessage] = $"{user.FirstName} account has been successfully added";
-                    return RedirectToAction("All", "User");
-                }
-
-                foreach (var item in result.Errors)
-                {
-                    TempData[MessageConstant.ErrorMessage] = item.Description.ToString();
-                }
-
+                TempData[MessageConstant.ErrorMessage] = $"Unsuccessfully added room";
+                model.RoomTypes = roomTypeService.AllAdd();
                 return View(model);
             }
 
+            TempData[MessageConstant.SuccessMessage] = $"Room Number {model.Number} has been successfully added";
             return RedirectToAction(nameof(All));
         }
 

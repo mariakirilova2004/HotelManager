@@ -49,7 +49,7 @@ namespace HotelManager.Infrastructure.Data
                 .WithMany(r => r.Clients);
 
             modelBuilder.Entity<Room>()
-                .HasKey(r => r.Number);
+                .HasKey(r => r.Id);
 
             modelBuilder.Entity<Room>()
                 .HasOne(r => r.RoomType);

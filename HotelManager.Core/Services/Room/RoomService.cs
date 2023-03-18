@@ -29,10 +29,13 @@ namespace HotelManager.Core.Services.Room
                 Number = model.Number,
                 Capacity = model.Capacity,
                 IsFree = model.IsFree,
-                RoomType = roomTypeService.All().Where(r => r.Type == model.RoomType).Select(r => new RoomType() { Type = model.RoomTyp}).FirstOrDefault(),
                 PriceForAdultBed = model.PriceForAdultBed,
-                PriceForChildBed = model.PriceForChildBed
-            }
+                PriceForChildBed = model.PriceForChildBed,
+                RoomTypeId = model.RoomTypeId
+            };
+
+            await this.dbContext.Rooms.AddAsync(room);
+            await this.dbContext.SaveChangesAsync();
         }
 
         public AllRoomsQueryModel All(int? capacity = null, string type = "", bool availability = false, int currentPage = 1, int roomsPerPage = 1)
@@ -49,17 +52,21 @@ namespace HotelManager.Core.Services.Room
                 PriceForChildBed = r.PriceForChildBed
             }).ToList();
 
-            if (capacity != null)
+            if (capacity != null && capacity != 0)
             {
                 roomsQuery = roomsQuery.Where(rq => rq.Capacity == capacity).ToList();
             }
 
-            if (type != null)
+            if (type != null && type != "All")
             {
-                roomsQuery = roomsQuery.Where(rq => rq.RoomType.Equals(type) == true).ToList();
+                roomsQuery = roomsQuery.Where(rq => rq.RoomType.CompareTo(type) == 0).ToList();
             }
 
-            if (availability != false)
+            if (availability == false)
+            {
+                roomsQuery = roomsQuery.Where(rq => rq.IsFree == false).ToList();
+            }
+            else
             {
                 roomsQuery = roomsQuery.Where(rq => rq.IsFree == true).ToList();
             }

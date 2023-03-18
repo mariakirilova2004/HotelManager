@@ -23,7 +23,7 @@ namespace HotelManager.Infrastructure.Data.Еntities.Account
 
         [Required]
         [MinLength(ClientPhoneNumberLength), MaxLength(ClientPhoneNumberLength)]
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
         [Required]
         [EmailAddress]

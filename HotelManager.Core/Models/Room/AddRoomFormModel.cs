@@ -13,25 +13,27 @@ namespace HotelManager.Core.Models.Room
     public class AddRoomFormModel
     {
         [Required]
-        [MinLength(RoomMinNumber), MaxLength(RoomMaxNumber)]
+        [Range(RoomMinNumber, RoomMaxNumber)]
         public int Number { get; set; }
 
         [Required]
-        [MinLength(RoomMinCapacity), MaxLength(RoomMaxCapacity)]
+        [Range(RoomMinCapacity, RoomMaxCapacity)]
         public int Capacity { get; set; }
-        public string RoomType { get; set; }
+
+        [Required]
+        public int RoomTypeId { get; set; }
 
         [Required]
         public bool IsFree { get; set; }
 
         [Required]
-        [MinLength(RoomMinPriceForAdultBed), MaxLength(RoomMaxPriceForAdultBed)]
-        public int PriceForAdultBed { get; set; }
+        [Range(RoomMinPriceForAdultBed, RoomMaxPriceForAdultBed)]
+        public decimal PriceForAdultBed { get; set; }
 
         [Required]
-        [MinLength(RoomMinPriceForChildBed), MaxLength(RoomMaxPriceForChildBed)]
-        public int PriceForChildBed { get; set; }
+        [Range(RoomMinPriceForChildBed, RoomMaxPriceForChildBed)]
+        public decimal PriceForChildBed { get; set; }
 
-        public List<RoomTypeViewModel> RoomTypes { get; set; } = new List<RoomTypeViewModel>();
+        public List<Infrastructure.Data.Еntities.RoomType>? RoomTypes { get; set; } = new List<Infrastructure.Data.Еntities.RoomType>();
     }
 }

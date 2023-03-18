@@ -11,7 +11,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace HotelManager.Areas.Admin.Controllers
 {
-
+    [AutoValidateAntiforgeryToken]
     public class UserController : AdminController
     {
         private readonly UserManager<User> userManager;

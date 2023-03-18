@@ -94,16 +94,9 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-floating">                              
-                                    @if (!Model.IsActive)
-                                    {
-                                        <input type="checkbox" name="IsActive" asp-for="@Model.IsActive" value="false" style="height: 40px; width: 40px" />
-                                    }
-                                    else
-                                    {
-                                        <input type="checkbox" name="IsActive" asp-for="@Model.IsActive" value="true" style="height: 40px; width: 40px" />
-                                    }
-                                    <label style="margin-left: 40px" for="isactive">Is Active User</label>
+                                <div class="form-floating">        
+                                    <input type="checkbox" name="IsActive" asp-for="@Model.IsActive" style="height: 40px; width: 40px" />
+                                    <label style="margin-left: 40px" for="isactive" asp-for="@Model.IsActive">Is Active User</label>
                                 </div>
                             </div>
                             <div class="col-md-6">

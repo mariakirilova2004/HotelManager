@@ -26,5 +26,15 @@ namespace HotelManager.Core.Services.RoomType
             })
             .ToList();
         }
+
+        public List<Infrastructure.Data.Еntities.RoomType> AllAdd()
+        {
+            return this.dbContext.RoomTypes.ToList();
+        }
+
+        public Infrastructure.Data.Еntities.RoomType FindById(int Id)
+        {
+            return this.dbContext.RoomTypes.Where(rt => rt.Id == Id).FirstOrDefault();
+        }
     }
 }

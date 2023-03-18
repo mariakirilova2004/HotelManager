@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelManager.Infrastructure.Migrations
 {
     [DbContext(typeof(HotelManagerDbContext))]
-    [Migration("20230312152727_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20230318122205_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -64,9 +64,10 @@ namespace HotelManager.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("PhoneNumber")
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
 
@@ -171,9 +172,9 @@ namespace HotelManager.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eb0a9cf7-3806-4e94-9d26-3612d48e1e3e",
+                            Id = "7a2174a1-d4c9-4565-ad0f-7cbda44a9247",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "916551e1-ad6a-42bb-8c9c-d28e6007b810",
+                            ConcurrencyStamp = "d050ba5a-a312-4dcc-8b02-d121b4a216ed",
                             EGN = "0888888888",
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
@@ -185,10 +186,10 @@ namespace HotelManager.Infrastructure.Migrations
                             MiddleName = "Userov",
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEF5dmbj6dH4J1NL1W2KV9IOswZRO1AqEYWI1pInhsEFRnQWy/0vRRnYp+MKfBA1h2Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJCB4dowOFKm8TlYEqlnhYRW7WfKqadv7Yk3Fyz8XfJiH3gZFkR+ev/a6j0izFqpRg==",
                             PhoneNumber = "0888888888",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b41f7a4f-504b-4216-8242-ddc0c75c6068",
+                            SecurityStamp = "de9d32f6-abe7-4ff8-9bfb-f8689b6c7d16",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
@@ -235,32 +236,31 @@ namespace HotelManager.Infrastructure.Migrations
 
             modelBuilder.Entity("HotelManager.Infrastructure.Data.Еntities.Room", b =>
                 {
-                    b.Property<int>("Number")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(7500)
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Number"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("Capacity")
-                        .HasMaxLength(8)
                         .HasColumnType("int");
 
                     b.Property<bool>("IsFree")
                         .HasColumnType("bit");
 
-                    b.Property<int>("PriceForAdultBed")
-                        .HasMaxLength(100000)
+                    b.Property<int>("Number")
                         .HasColumnType("int");
 
-                    b.Property<int>("PriceForChildBed")
-                        .HasMaxLength(100000)
-                        .HasColumnType("int");
+                    b.Property<decimal>("PriceForAdultBed")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PriceForChildBed")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("RoomTypeId")
                         .HasColumnType("int");
 
-                    b.HasKey("Number");
+                    b.HasKey("Id");
 
                     b.HasIndex("RoomTypeId");
 

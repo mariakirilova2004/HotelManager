@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HotelManager.Infrastructure.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -63,7 +63,7 @@ namespace HotelManager.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    PhoneNumber = table.Column<int>(type: "int", maxLength: 10, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsAdult = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -196,17 +196,18 @@ namespace HotelManager.Infrastructure.Migrations
                 name: "Rooms",
                 columns: table => new
                 {
-                    Number = table.Column<int>(type: "int", maxLength: 7500, nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Capacity = table.Column<int>(type: "int", maxLength: 8, nullable: false),
+                    Number = table.Column<int>(type: "int", nullable: false),
+                    Capacity = table.Column<int>(type: "int", nullable: false),
                     RoomTypeId = table.Column<int>(type: "int", nullable: false),
                     IsFree = table.Column<bool>(type: "bit", nullable: false),
-                    PriceForAdultBed = table.Column<int>(type: "int", maxLength: 100000, nullable: false),
-                    PriceForChildBed = table.Column<int>(type: "int", maxLength: 100000, nullable: false)
+                    PriceForAdultBed = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PriceForChildBed = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rooms", x => x.Number);
+                    table.PrimaryKey("PK_Rooms", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Rooms_RoomTypes_RoomTypeId",
                         column: x => x.RoomTypeId,
@@ -242,7 +243,7 @@ namespace HotelManager.Infrastructure.Migrations
                         name: "FK_Reservations_Rooms_RoomNumberId",
                         column: x => x.RoomNumberId,
                         principalTable: "Rooms",
-                        principalColumn: "Number",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -273,7 +274,7 @@ namespace HotelManager.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "DismissionDate", "EGN", "Email", "EmailConfirmed", "FirstName", "HiringDate", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "MiddleName", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "eb0a9cf7-3806-4e94-9d26-3612d48e1e3e", 0, "916551e1-ad6a-42bb-8c9c-d28e6007b810", null, "0888888888", "admin@mail.com", false, "User", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Userov", false, null, "Userov", "ADMIN@MAIL.COM", "ADMIN", "AQAAAAEAACcQAAAAEF5dmbj6dH4J1NL1W2KV9IOswZRO1AqEYWI1pInhsEFRnQWy/0vRRnYp+MKfBA1h2Q==", "0888888888", false, "b41f7a4f-504b-4216-8242-ddc0c75c6068", false, "Admin" });
+                values: new object[] { "7a2174a1-d4c9-4565-ad0f-7cbda44a9247", 0, "d050ba5a-a312-4dcc-8b02-d121b4a216ed", null, "0888888888", "admin@mail.com", false, "User", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Userov", false, null, "Userov", "ADMIN@MAIL.COM", "ADMIN", "AQAAAAEAACcQAAAAEJCB4dowOFKm8TlYEqlnhYRW7WfKqadv7Yk3Fyz8XfJiH3gZFkR+ev/a6j0izFqpRg==", "0888888888", false, "de9d32f6-abe7-4ff8-9bfb-f8689b6c7d16", false, "Admin" });
 
             migrationBuilder.InsertData(
                 table: "RoomTypes",

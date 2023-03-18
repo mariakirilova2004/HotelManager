@@ -1,10 +1,11 @@
-﻿@model AddUserFormModel
+﻿@using HotelManager.Core.Models.Room
+@model AddRoomFormModel
 
 @{
-    ViewData["Title"] = "Add New User";
+    ViewData["Title"] = "Add New Room";
 }
 
-<!-- Booking Start -->
+<!-- Room Start -->
 <div class="container-xxl py-5">
     <div class="container">
         <div class="row g-5">
@@ -32,72 +33,48 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="username" class="form-control" id="username" autocomplete="username" aria-required="true" placeholder="Username" asp-for="@Model.UserName">
-                                    <label for="username">Username</label>
-                                    <span asp-validation-for="@Model.UserName" class="text-danger"></span>
+                                    <input type="number" value="@Model.Number" class="form-control" id="number" autocomplete="number" aria-required="true" placeholder="Number" asp-for="@Model.Number">
+                                    <label for="number">Room Number</label>
+                                    <span asp-validation-for="@Model.Number" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="firstname" autocomplete="firstname" aria-required="true" placeholder="First Name" asp-for="@Model.FirstName">
-                                    <label for="secondname">First Name</label>
-                                    <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+                                    <input type="number" value="@Model.Capacity" class="form-control" id="capacity" autocomplete="capacity" aria-required="true" placeholder="First Name" asp-for="@Model.Capacity">
+                                    <label for="capacity">Capacity</label>
+                                    <span asp-validation-for="@Model.Capacity" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="RoomTypeId" class="form-control" id ="roomtype">
+                                        @foreach (var type in Model.RoomTypes)
+                                        {
+                                            <option value="@type.Id" placeholder="">@type.Type</option>
+                                        }
+                                    </select>
+                                    <label for="roomtype">Type of Room</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="middlename" autocomplete="middlename" aria-required="true" placeholder="Middle Name" asp-for="@Model.MiddleName">
-                                    <label for="middlename">Middle Name</label>
-                                    <span asp-validation-for="@Model.MiddleName" class="text-danger"></span>
+                                    <input type="checkbox" value="@Model.IsFree" style="height: 40px; width: 40px" @(Model.IsFree?"checked='checked'":"") id="isfree" asp-for="@Model.IsFree">
+                                    <label style="margin-left: 40px" for="isfree">Is It Available</label>
+                                    <span asp-validation-for="@Model.IsFree" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="lastname" autocomplete="lastname" aria-required="true" placeholder="Last Name" asp-for="@Model.LastName">
-                                    <label for="lastname">Last Name</label>
-                                    <span asp-validation-for="@Model.LastName" class="text-danger"></span>
+                                    <input type="number" value="@Model.PriceForAdultBed" class="form-control" id="priceForAdultBed" autocomplete="priceForAdultBed" aria-required="true" placeholder="Price For Adult Bed" asp-for="@Model.PriceForAdultBed">
+                                    <label for="priceForAdultBed">Price For Adult Bed</label>
+                                    <span asp-validation-for="@Model.PriceForAdultBed" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="egn" autocomplete="egn" aria-required="true" placeholder="EGN" asp-for="@Model.EGN">
-                                    <label for="egn">EGN</label>
-                                    <span asp-validation-for="@Model.EGN" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="phonenumber" autocomplete="phonenumber" aria-required="true" placeholder="Phone Number" asp-for="@Model.PhoneNumber">
-                                    <label for="phonenumber">Phone Number</label>
-                                    <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" autocomplete="email" aria-required="true" placeholder="Email" asp-for="@Model.Email">
-                                    <label for="email">Email</label>
-                                    <span asp-validation-for="@Model.Email" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="date" value="01/01/2023" class="form-control" id="hiringdate" autocomplete="hiringdate" aria-required="true" placeholder="Hiring Date" asp-for="@Model.HiringDate">
-                                    <label for="hiringdate">Hiring Date</label>
-                                    <span asp-validation-for="@Model.HiringDate" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="password" class="form-control" id="password" autocomplete="password" aria-required="true" placeholder="Password" asp-for="@Model.Password">
-                                    <label for="password">Password</label>
-                                    <span asp-validation-for="@Model.Password" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="password" class="form-control" id="password" aria-required="true" placeholder="Confirm Password" asp-for="@Model.ConfirmPassword">
-                                    <label for="password">Confirm Password</label>
-                                    <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+                                    <input type="number" value="@Model.PriceForChildBed" class="form-control" id="priceForChildBed" aria-required="true" placeholder="Price For Child Bed" asp-for="@Model.PriceForChildBed">
+                                    <label for="priceForChildBed">Price For Child Bed</label>
+                                    <span asp-validation-for="@Model.PriceForChildBed" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-12">
@@ -110,7 +87,7 @@
         </div>
     </div>
 </div>
-<!-- Booking End -->
+<!-- Room End -->
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

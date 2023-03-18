@@ -10,5 +10,8 @@ namespace HotelManager.Core.Services.RoomType
     public interface IRoomTypeService
     {
         List<RoomTypeViewModel> All();
+        List<Infrastructure.Data.Еntities.RoomType> AllAdd();
+
+        Infrastructure.Data.Еntities.RoomType FindById(int Id);
     }
 }
