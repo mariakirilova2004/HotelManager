@@ -29,7 +29,7 @@ namespace HotelManager.Areas.Admin.Controllers
             this.roomTypeService = _roomTypeService;
         }
 
-        [Route("/AllRooms")]
+        [Route("Admin/Rooms")]
         [HttpGet]
         public IActionResult All([FromQuery] AllRoomsQueryModel query)
         {
