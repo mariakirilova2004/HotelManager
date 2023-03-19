@@ -26,10 +26,10 @@
             <div class="d-flex justify-content-between">
                 @if (User.IsAdmin())
                 {
-                    <form asp-area="Admin" asp-controller="Room" asp-action="Edit" asp-route-id="@Model.Number" asp-route-information="@Model.GetInformation()" method="get">
+                    <form asp-area="Admin" asp-controller="Room" asp-action="Edit" asp-route-id="@Model.Id" asp-route-information="@Model.GetInformation()" method="get">
                         <button type="submit" class="btn btn-sm btn-primary rounded py-2 px-4" href="">Edit</button>
                     </form>
-                    <form asp-area="Admin" asp-controller="Room" asp-action="Delete" asp-route-id="@Model.Number" asp-route-information="@Model.GetInformation()" method="post">
+                    <form asp-area="Admin" asp-controller="Room" asp-action="Delete" asp-route-id="@Model.Id" asp-route-information="@Model.GetInformation()" method="post">
                        <button type="submit" class="btn btn-sm btn-dark rounded py-2 px-4">Delete</button>
                     </form>
                 }

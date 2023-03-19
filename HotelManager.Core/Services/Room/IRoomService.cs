@@ -14,8 +14,11 @@ namespace HotelManager.Core.Services.Room
                                bool availability = false,
                                int currentPage = 1,
                                int roomsPerPage = 1);
-        bool NumberExists(int number);
+        bool NumberExists(int number, int id);
 
         Task Add(AddRoomFormModel model);
+        Task Delete(int id);
+        AddRoomFormModel GetById(int id);
+        Task Edit(AddRoomFormModel model);
     }
 }

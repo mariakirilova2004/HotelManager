@@ -84,7 +84,7 @@ namespace HotelManager.Areas.Admin.Controllers
                 return View(model);
             }
 
-            if (roomService.NumberExists(model.Number))
+            if (roomService.NumberExists(model.Number, model.Id))
             {
                 TempData[MessageConstant.ErrorMessage] = "Тhere is a room with this Room Number";
                 model.RoomTypes = roomTypeService.AllAdd();
@@ -106,120 +106,84 @@ namespace HotelManager.Areas.Admin.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        ////Forget the data of the user but the id remains
+        //Delete the room
 
-        //[HttpPost]
-        //public async Task<IActionResult> Forget(string Id)
-        //{
-        //    if (!User.IsAdmin())
-        //    {
-        //        TempData[MessageConstant.WarningMessage] = "You cannot delete Users!";
-        //        this.logger.LogInformation("User {0} tried to delete user, but they are not Admin!", this.User.Id());
-        //        return RedirectToAction("Index", "Home");
-        //    }
+        [HttpPost]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            if (!User.IsAdmin())
+            {
+                TempData[MessageConstant.WarningMessage] = "You cannot delete Rooms!";
+                this.logger.LogInformation("User {0} tried to delete room, but they are not Admin!", this.User.Id());
+                return RedirectToAction("Index", "Home");
+            }
 
-        //    try
-        //    {
-        //        await this.users.Forget(Id);
-        //        TempData[MessageConstant.SuccessMessage] = "Successfully deleted user";
-        //    }
-        //    catch (Exception)
-        //    {
-        //        TempData[MessageConstant.ErrorMessage] = "Unsuccessfully deleted user";
-        //        this.logger.LogInformation("User {0} could not be deleted!", Id);
-        //    }
-        //    return RedirectToAction(nameof(All));
-        //}
+            try
+            {
+                await this.roomService.Delete(Id);
+                TempData[MessageConstant.SuccessMessage] = "Successfully deleted room";
+            }
+            catch (Exception)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Unsuccessfully deleted room";
+                this.logger.LogInformation("Room {0} could not be deleted!", Id);
+            }
+            return RedirectToAction(nameof(All));
+        }
 
-        //// Update data of a user
+        // Update data of a room
 
-        //[HttpGet]
-        //public async Task<IActionResult> Edit(string Id)
-        //{
-        //    if (!User.IsAdmin())
-        //    {
-        //        TempData[MessageConstant.WarningMessage] = "You cannot edit Users!";
-        //        this.logger.LogInformation("User {0} tried to edit user, but they are not Admin!", this.User.Id());
-        //        return RedirectToAction("All", "User");
-        //    }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int Id)
+        {
+            if (!User.IsAdmin())
+            {
+                TempData[MessageConstant.WarningMessage] = "You cannot edit Rooms!";
+                this.logger.LogInformation("User {0} tried to edit room, but they are not Admin!", this.User.Id());
+                return RedirectToAction(nameof(All));
+            }
 
-        //    var model = users.GetUserById(Id);
+            var model = roomService.GetById(Id);
 
-        //    if (model == null)
-        //    {
-        //        TempData[MessageConstant.WarningMessage] = "No such User!";
-        //        return RedirectToAction(nameof(All));
-        //    }
+            if (model == null)
+            {
+                TempData[MessageConstant.WarningMessage] = "No such Room!";
+                return RedirectToAction(nameof(All));
+            }
 
-        //    var token = await userManager.GeneratePasswordResetTokenAsync(model);
+            return View(model);
+        }
 
-        //    EditUserFormModel user = new EditUserFormModel()
-        //    {
-        //        Id = model.Id,
-        //        UserName = model.UserName,
-        //        FirstName = model.FirstName,
-        //        MiddleName = model.MiddleName,
-        //        LastName = model.LastName,
-        //        PhoneNumber = model.PhoneNumber,
-        //        EGN = model.EGN,
-        //        Email = model.Email,
-        //        HiringDate = model.HiringDate,
-        //        DismissionDate = model.DismissionDate,
-        //        IsActive = model.IsActive,
-        //        Token = token
-        //    };
+        [HttpPost]
+        public async Task<IActionResult> Edit(AddRoomFormModel model)
+        {
 
-        //    return View(user);
-        //}
+            if (!ModelState.IsValid)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid edit";
+                return View(model);
+            }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Edit(EditUserFormModel model)
-        //{
-        //    var sanitalizer = new HtmlSanitizer();
+            if (roomService.NumberExists(model.Number, model.Id))
+            {
+                TempData[MessageConstant.ErrorMessage] = "Тhere is a room with this Room Number";
+                model.RoomTypes = roomTypeService.AllAdd();
+                return View(model);
+            }
 
-        //    if (!ModelState.IsValid)
-        //    {
-        //        TempData[MessageConstant.ErrorMessage] = "Invalid edit";
-        //        return View(model);
-        //    }
+            try
+            {
+                await this.roomService.Edit(model);
+            }
+            catch (Exception)
+            {
+                this.logger.LogInformation("Room {0} did not manage to be edited!", model.Number);
+                TempData[MessageConstant.ErrorMessage] = "Unsuccessful editing of a room";
+                model.RoomTypes = roomTypeService.AllAdd();
+                return View(model);
+            }
 
-        //    if (userManager.Users.Any(u => u.Email == model.Email && u.Id != model.Id))
-        //    {
-        //        TempData[MessageConstant.ErrorMessage] = "Тhere is a user with this email";
-        //        return View(model);
-        //    }
-
-        //    if (userManager.Users.Any(u => u.PhoneNumber == model.PhoneNumber && u.Id != model.Id))
-        //    {
-        //        TempData[MessageConstant.ErrorMessage] = "Тhere is a user with this Phone Number";
-        //        return View(model);
-        //    }
-
-        //    try
-        //    {
-        //        await this.users.Edit(model);
-        //        if (model.Password != null)
-        //        {
-        //            var resetPassResult = await userManager.ResetPasswordAsync(users.GetUserById(model.Id), model.Token, model.Password);
-        //            if (!resetPassResult.Succeeded)
-        //            {
-        //                foreach (var error in resetPassResult.Errors)
-        //                {
-        //                    ModelState.TryAddModelError(error.Code, error.Description);
-        //                    TempData[MessageConstant.ErrorMessage] = error.Description;
-        //                }
-        //                return View(model);
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        this.logger.LogInformation("User {0} did not manage to be edited!", model.Id);
-        //        TempData[MessageConstant.ErrorMessage] = "Unsuccessful editing of a user";
-        //        return View(model);
-        //    }
-
-        //    return RedirectToAction("All", "User");
-        //}
+            return RedirectToAction("All", "Room");
+        }
     }
 }

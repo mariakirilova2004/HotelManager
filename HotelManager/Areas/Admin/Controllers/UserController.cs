@@ -38,6 +38,7 @@ namespace HotelManager.Areas.Admin.Controllers
             var users = this.cache.Get<AllUsersQueryModel>("UsersCacheKey");
             if (users == null)
             {
+
                 var queryResult = this.users.All(
                     query.SearchTerm,
                     query.SearchTermOn,

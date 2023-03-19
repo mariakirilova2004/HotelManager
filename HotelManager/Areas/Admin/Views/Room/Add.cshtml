@@ -58,9 +58,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="checkbox" value="@Model.IsFree" style="height: 40px; width: 40px" @(Model.IsFree?"checked='checked'":"") id="isfree" asp-for="@Model.IsFree">
-                                    <label style="margin-left: 40px" for="isfree">Is It Available</label>
-                                    <span asp-validation-for="@Model.IsFree" class="text-danger"></span>
+                                    <input type="checkbox" asp-for="IsFree"  style="margin-top: 20px; height: 40px; width: 40px" />
+                                    <label style="margin-left: 40px" asp-for="IsFree">Only Available Rooms</label>
                                 </div>
                             </div>
                             <div class="col-md-6">

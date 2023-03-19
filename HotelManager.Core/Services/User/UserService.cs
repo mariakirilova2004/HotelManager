@@ -2,6 +2,7 @@
 using HotelManager.Core.Models.User;
 using HotelManager.Infrastructure.Data;
 using HotelManager.Infrastructure.Data.Еntities.Account;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManager.Core.Services.User
 {
@@ -17,11 +18,37 @@ namespace HotelManager.Core.Services.User
         public AllUsersQueryModel All(string searchTerm = "",
                                       string searchTermOn = "FirstName",
                                           int currentPage = 1,
-                                          int usersPerPage = 1)
+                                          int usersPerPage = 10)
         {
-            var usersQuery = new List<UserViewModel>();
 
-            usersQuery = this.dbContext.Users.Select(u => new UserViewModel
+            var usersQuery = this.dbContext.Users.ToList();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                switch (searchTermOn)
+                {
+                    case "UserName":
+                        usersQuery = usersQuery.Where(u => u.UserName.ToLower().Contains(searchTerm.ToLower())).ToList();
+                        break;
+                    case "FirstName":
+                        usersQuery = usersQuery.Where(u => u.FirstName.ToLower().Contains(searchTerm.ToLower())).ToList();
+                        break;
+                    case "MiddleName":
+                        usersQuery = usersQuery.Where(u => u.MiddleName.ToLower().Contains(searchTerm.ToLower())).ToList();
+                        break;
+                    case "LastName":
+                        usersQuery = usersQuery.Where(u => u.LastName.ToLower().Contains(searchTerm.ToLower())).ToList();
+                        break;
+                    case "Email":
+                        usersQuery = usersQuery.Where(u => u.Email.ToLower().Contains(searchTerm.ToLower())).ToList();
+                        break;
+                }
+            }
+
+            var users = usersQuery
+                .Skip((currentPage - 1) * usersPerPage)
+                .Take(usersPerPage)
+                .Select(u => new UserViewModel
             {
                 Id = u.Id,
                 UserName = u.UserName,
@@ -35,24 +62,7 @@ namespace HotelManager.Core.Services.User
                 IsActive = u.IsActive
             }).ToList();
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                switch (searchTermOn)
-                {
-                    case "UserName": usersQuery = usersQuery.Where(u => u.UserName.ToLower().Contains(searchTerm.ToLower())).ToList();
-                        break;
-                    case "FirstName": usersQuery = usersQuery.Where(u => u.FirstName.ToLower().Contains(searchTerm.ToLower())).ToList();
-                        break;
-                    case "MiddleName": usersQuery = usersQuery.Where(u => u.MiddleName.ToLower().Contains(searchTerm.ToLower())).ToList();
-                        break;
-                    case "LastName": usersQuery = usersQuery.Where(u => u.LastName.ToLower().Contains(searchTerm.ToLower())).ToList();
-                        break;
-                    case "Email": usersQuery = usersQuery.Where(u => u.Email.ToLower().Contains(searchTerm.ToLower())).ToList();
-                        break;
-                }
-            }
-
-            usersQuery = usersQuery.OrderByDescending(c => c.HiringDate).ToList();
+            users = users.OrderByDescending(c => c.HiringDate).ToList();
 
             var totalUsers = usersQuery.Count();
 
@@ -60,7 +70,7 @@ namespace HotelManager.Core.Services.User
             {
                 UsersPerPage = usersPerPage,
                 TotalUsersCount = totalUsers,
-                Users = usersQuery
+                Users = users
             };
         }
 

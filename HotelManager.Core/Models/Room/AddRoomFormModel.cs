@@ -12,6 +12,8 @@ namespace HotelManager.Core.Models.Room
 {
     public class AddRoomFormModel
     {
+        public int Id { get; set; }
+
         [Required]
         [Range(RoomMinNumber, RoomMaxNumber)]
         public int Number { get; set; }

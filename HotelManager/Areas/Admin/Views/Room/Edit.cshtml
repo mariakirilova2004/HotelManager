@@ -45,7 +45,7 @@
                                     <span asp-validation-for="@Model.Capacity" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col col-md-6">
+                            <div class="col-md-6">
                                 <div class="form-floating">
                                     <select asp-for="RoomTypeId" class="form-control" id ="roomtype">
                                         @foreach (var type in Model.RoomTypes)
@@ -58,9 +58,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="checkbox" value="@Model.IsFree" style="height: 40px; width: 40px" @(Model.IsFree?"checked='checked'":"") id="isfree" asp-for="@Model.IsFree">
-                                    <label style="margin-left: 40px" for="isfree">Is It Available</label>
-                                    <span asp-validation-for="@Model.IsFree" class="text-danger"></span>
+                                    <input type="checkbox" asp-for="IsFree"  style="margin-top: 20px; height: 40px; width: 40px" />
+                                    <label style="margin-left: 40px" asp-for="IsFree">Only Available Rooms</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -77,9 +76,11 @@
                                     <span asp-validation-for="@Model.PriceForChildBed" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit" asp-area="Admin" asp-controller="User" asp-action="Edit" formmethod="post">Edit</button>
-                                <a class="btn btn-primary w-100 py-3" asp-area="Admin" asp-controller="User" asp-action="All"> Close</a>
+                            <div class="col-md-6">
+                                <button class="btn btn-primary w-100 py-3" type="submit" asp-area="Admin" asp-controller="Room" asp-action="Edit" formmethod="post">Edit</button>
+                            </div>
+                            <div class="col-md-6">
+                                <a class="btn btn-primary w-100 py-3" asp-area="Admin" asp-controller="Room" asp-action="All"> Close</a>
                             </div>
                         </div>
                     </form>

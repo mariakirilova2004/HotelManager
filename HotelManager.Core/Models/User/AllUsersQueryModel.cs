@@ -15,7 +15,7 @@ namespace HotelManager.Core.Models.User
         [DisplayName("Search in field")]
         public string SearchTermOn { get; init; }
 
-        public int UsersPerPage { get; init; }
+        public int UsersPerPage { get; init; } = 10;
         public int CurrentPage { get; init; } = 1;
         public int TotalUsersCount { get; set; }
         public List<UserViewModel> Users { get; set; } = new List<UserViewModel>();

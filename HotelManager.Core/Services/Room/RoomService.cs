@@ -1,8 +1,10 @@
-﻿using HotelManager.Core.Models.Room;
+﻿using Ganss.Xss;
+using HotelManager.Core.Models.Room;
 using HotelManager.Core.Services.RoomType;
 using HotelManager.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,19 +40,9 @@ namespace HotelManager.Core.Services.Room
             await this.dbContext.SaveChangesAsync();
         }
 
-        public AllRoomsQueryModel All(int? capacity = null, string type = "", bool availability = false, int currentPage = 1, int roomsPerPage = 1)
+        public AllRoomsQueryModel All(int? capacity = null, string type = "", bool availability = false, int currentPage = 1, int roomsPerPage = 10)
         {
-            var roomsQuery = new List<RoomViewModel>();
-
-            roomsQuery = this.dbContext.Rooms.Select(r => new RoomViewModel
-            {
-                Number = r.Number,
-                Capacity = r.Capacity,
-                RoomType = r.RoomType.Type,
-                IsFree = r.IsFree,
-                PriceForAdultBed = r.PriceForAdultBed,
-                PriceForChildBed = r.PriceForChildBed
-            }).ToList();
+            var roomsQuery = this.dbContext.Rooms.Include(r => r.RoomType).ToList();
 
             if (capacity != null && capacity != 0)
             {
@@ -59,19 +51,29 @@ namespace HotelManager.Core.Services.Room
 
             if (type != null && type != "All")
             {
-                roomsQuery = roomsQuery.Where(rq => rq.RoomType.CompareTo(type) == 0).ToList();
+                roomsQuery = roomsQuery.Where(rq => rq.RoomType.Type.CompareTo(type) == 0).ToList();
             }
 
-            if (availability == false)
-            {
-                roomsQuery = roomsQuery.Where(rq => rq.IsFree == false).ToList();
-            }
-            else
+            if (availability == true)
             {
                 roomsQuery = roomsQuery.Where(rq => rq.IsFree == true).ToList();
             }
 
-            roomsQuery = roomsQuery.OrderByDescending(c => c.IsFree).ToList();
+            var rooms = roomsQuery
+                .Skip((currentPage - 1) * roomsPerPage)
+                .Take(roomsPerPage)
+                .Select(r => new RoomViewModel
+            {
+                Id = r.Id,
+                Number = r.Number,
+                Capacity = r.Capacity,
+                RoomType = r.RoomType.Type,
+                IsFree = r.IsFree,
+                PriceForAdultBed = r.PriceForAdultBed,
+                PriceForChildBed = r.PriceForChildBed
+            }).ToList();
+
+            rooms = rooms.OrderBy(c => c.Number).ToList();
 
             var totalRooms = roomsQuery.Count();
 
@@ -79,13 +81,59 @@ namespace HotelManager.Core.Services.Room
             {
                 RoomsPerPage = roomsPerPage,
                 TotalRoomsCount = totalRooms,
-                Rooms = roomsQuery
+                Rooms = rooms
             };
         }
 
-        public bool NumberExists(int number)
+        public async Task Delete(int id)
         {
-            return this.dbContext.Rooms.Any(r => r.Number == number);
+            var room = this.dbContext.Rooms.Where(r => r.Id == id).FirstOrDefault();
+            this.dbContext.Rooms.Remove(room);
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task Edit(AddRoomFormModel model)
+        {
+            var sanitalizer = new HtmlSanitizer();
+
+            var room = this.dbContext.Rooms.Where(r => r.Number == model.Number).FirstOrDefault();
+
+            room.Number = model.Number;
+            room.IsFree = model.IsFree;
+            room.Capacity = model.Capacity;
+            room.PriceForAdultBed = model.PriceForAdultBed;
+            room.PriceForChildBed = model.PriceForChildBed;
+            room.RoomTypeId = model.RoomTypeId;
+
+            dbContext.Rooms.Update(room);
+
+            try
+            {
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public AddRoomFormModel GetById(int id)
+        {
+            return this.dbContext.Rooms.Where(r => r.Id == id)?.Select(r => new AddRoomFormModel {
+                Id = r.Id,
+                Number = r.Number,
+                Capacity = r.Capacity,
+                RoomTypeId = r.RoomTypeId,
+                IsFree = r.IsFree,
+                PriceForAdultBed = r.PriceForAdultBed,
+                PriceForChildBed = r.PriceForChildBed,
+                RoomTypes = roomTypeService.AllAdd()
+            })?.FirstOrDefault();
+        }
+
+        public bool NumberExists(int number, int id)
+        {
+            return this.dbContext.Rooms.Any(r => r.Number == number && r.Id != id);
         }
     }
 }

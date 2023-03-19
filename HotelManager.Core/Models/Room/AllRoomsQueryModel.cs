@@ -18,7 +18,7 @@ namespace HotelManager.Core.Models.Room
 
         [DisplayName("Search by availability")]
         public bool Availability { get; init; }
-        public int RoomsPerPage { get; init; }
+        public int RoomsPerPage { get; init; } = 10;
         public int CurrentPage { get; init; } = 1;
         public int TotalRoomsCount { get; set; }
         public List<RoomViewModel> Rooms { get; set; } = new List<RoomViewModel>();
