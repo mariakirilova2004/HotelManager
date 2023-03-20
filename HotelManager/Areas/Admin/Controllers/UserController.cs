@@ -5,6 +5,7 @@ using HotelManager.Core.Models.User;
 using HotelManager.Core.Services.User;
 using HotelManager.Extensions;
 using HotelManager.Infrastructure.Data.Еntities.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
