@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static HotelManager.Infrastructure.Data.DataConstants.Client;
 
-namespace HotelManager.Infrastructure.Data.Еntities.Account
+namespace HotelManager.Infrastructure.Data.Еntities
 {
     public class Client
     {
@@ -14,7 +14,7 @@ namespace HotelManager.Infrastructure.Data.Еntities.Account
         public int Id { get; set; }
 
         [Required]
-        [StringLengthAttribute(ClientMaxLengthFirstName, MinimumLength = ClientMinLengthFirstName)]
+        [StringLength(ClientMaxLengthFirstName, MinimumLength = ClientMinLengthFirstName)]
         public string FirstName { get; set; }
 
         [Required]

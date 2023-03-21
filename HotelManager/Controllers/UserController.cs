@@ -30,6 +30,8 @@ namespace HotelManager.Controllers
             this.cache = _cache;
         }
 
+
+       
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login()
@@ -70,6 +72,8 @@ namespace HotelManager.Controllers
 
                 if (result.Succeeded)
                 {
+
+
                     this.cache.Remove("UsersCacheKey");
                     TempData[MessageConstant.SuccessMessage] = "You have successfully logged in";
                     return RedirectToAction("Index", "Home");
