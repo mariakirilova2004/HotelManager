@@ -1,7 +1,7 @@
 ﻿using HotelManager.Infrastructure.Data.Еntities.Account;
 using Microsoft.AspNetCore.Identity;
 
-namespace WeVolunteer.Extensions
+namespace HotelManager.Extensions
 {
     public static class ApplicationBuilderExtensions
     {

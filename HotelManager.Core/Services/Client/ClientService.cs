@@ -1,5 +1,6 @@
 ﻿using Ganss.Xss;
 using HotelManager.Core.Models.Client;
+using HotelManager.Core.Models.Reservation;
 using HotelManager.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,24 +24,57 @@ namespace HotelManager.Core.Services.Client
 
         public async Task Add(AddClientFormModel model)
         {
-            var client = new Infrastructure.Data.Еntities.Client()
-            {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                PhoneNumber = model.PhoneNumber,
-                Email = model.Email,
-                IsAdult = model.IsAdult
-            };
+            var sanitalizer = new HtmlSanitizer();
+
+            var client = new Infrastructure.Data.Еntities.Client();
+
+            client.FirstName = sanitalizer.Sanitize(model.FirstName);
+            client.LastName = sanitalizer.Sanitize(model.LastName);
+            client.PhoneNumber = model.PhoneNumber;
+            client.Email = sanitalizer.Sanitize(model.Email);
+            client.IsAdult = model.IsAdult;
 
             await this.dbContext.Clients.AddAsync(client);
             await this.dbContext.SaveChangesAsync();
         }
 
-        public AllClientsQueryModel All()
+
+        public AllClientsQueryModel All(string firstNameSearch, string lastNameSearch, int currentPage, int clientsPerPage)
         {
-            // TO DO: Implement All() function
+            var clientsQuery = this.dbContext.Clients.ToList();
+
+            if (firstNameSearch != null && firstNameSearch != "")
+            {
+                clientsQuery = clientsQuery.Where(cq => cq.FirstName == firstNameSearch).ToList();
+            }
+
+            if (lastNameSearch != null && lastNameSearch != "")
+            {
+                clientsQuery = clientsQuery.Where(cq => cq.LastName == lastNameSearch).ToList();
+            }
+
+            var clients = clientsQuery
+                .Skip((currentPage - 1) * clientsPerPage)
+                .Take(clientsPerPage)
+                .Select(c => new ClientViewModel
+                {
+                    Id = c.Id,
+                    FirstName = c.FirstName,
+                    LastName = c.LastName,
+                    IsAdult = c.IsAdult,
+                    PhoneNumber = c.PhoneNumber,
+                    Email = c.Email
+                }).ToList();
+
+            clients = clients.OrderBy(c => c.FirstName).ToList();
+
+            var totalClients = clientsQuery.Count();
+
             return new AllClientsQueryModel()
             {
+                ClientsPerPage = clientsPerPage,
+                TotalClientsCount = totalClients,
+                Clients = clients
             };
         }
 
@@ -57,10 +91,10 @@ namespace HotelManager.Core.Services.Client
 
             var client = this.dbContext.Clients.Where(c => c.Id == model.Id).FirstOrDefault();
 
-            client.FirstName = model.FirstName;
-            client.LastName = model.LastName;
+            client.FirstName = sanitalizer.Sanitize(model.FirstName);
+            client.LastName = sanitalizer.Sanitize(model.LastName);
             client.PhoneNumber = model.PhoneNumber;
-            client.Email = model.Email;
+            client.Email = sanitalizer.Sanitize(model.Email);
             client.IsAdult = model.IsAdult;
 
             dbContext.Clients.Update(client);
@@ -86,6 +120,37 @@ namespace HotelManager.Core.Services.Client
                 Email = c.Email,
                 IsAdult = c.IsAdult
             })?.FirstOrDefault();
+        }
+        public bool EmailExists(string email, int id)
+        {
+            return this.dbContext.Clients.Where(c => c.Email.CompareTo(email) == 0 && c.Id != id).FirstOrDefault() != null;
+        }
+
+        public bool PhoneNumberExists(string phoneNumber, int id)
+        {
+            return this.dbContext.Clients.Where(c => c.Email.CompareTo(phoneNumber) == 0 && c.Id != id).FirstOrDefault() != null;
+        }
+
+        public bool Exists(int id)
+        {
+            return this.dbContext.Clients.Where(c => c.Id == id).FirstOrDefault() != null;
+        }
+
+        public DetailsClientViewModel CauseDetailsById(int id)
+        {
+            var client = this.dbContext.Clients.Where(c => c.Id == id).Include(c => c.Reservations).FirstOrDefault();
+            var reservations = client.Reservations.Select(u => new ReservationViewModel { }).ToList();
+
+            return  new DetailsClientViewModel()
+                    {
+                        Id = client.Id,
+                        FirstName = client.FirstName,
+                        LastName = client.LastName,
+                        Email = client.Email,
+                        PhoneNumber = client.PhoneNumber,
+                        IsAdult = client.IsAdult,
+                        Reservations = reservations
+                    };
         }
     }
 }

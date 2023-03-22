@@ -1,4 +1,5 @@
-﻿using HotelManager.Core.Models.Room;
+﻿using HotelManager.Core.Models.Client;
+using HotelManager.Core.Models.Room;
 using HotelManager.Core.Models.User;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,11 @@ namespace HotelManager.Core.Extensions
         public static string GetInformation(this UserViewModel user)
         {
             return user.Email.Replace("@", "_") + "_" + GetName(user.FirstName, user.MiddleName, user.LastName);
+        }
+
+        public static string GetInformation(this ClientViewModel client)
+        {
+            return client.Email.Replace("@", "_") + "_" + GetName(client.FirstName, client.PhoneNumber, client.LastName);
         }
 
         private static string GetName(string fn, string mn, string ln)

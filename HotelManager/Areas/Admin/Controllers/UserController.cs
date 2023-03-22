@@ -76,6 +76,13 @@ namespace HotelManager.Areas.Admin.Controllers
         {
             var sanitalizer = new HtmlSanitizer();
 
+            if (!User.IsAdmin())
+            {
+                TempData[MessageConstant.WarningMessage] = "You cannot add Users!";
+                this.logger.LogInformation("User {0} tried to add user, but they are not Admin!", this.User.Id());
+                return RedirectToAction("Index", "Home");
+            }
+
             if (!ModelState.IsValid)
             {
                 TempData[MessageConstant.ErrorMessage] = "Invalid add";

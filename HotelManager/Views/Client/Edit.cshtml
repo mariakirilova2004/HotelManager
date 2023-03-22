@@ -1,0 +1,81 @@
+﻿@using HotelManager.Core.Models.Client
+@model AddClientFormModel
+
+@{
+    ViewData["Title"] = $"Edit Client {@Model.FirstName} {@Model.LastName} ";
+}
+
+<!-- Client Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-6">
+                <div class="row g-3">
+                <div class="col-6 text-end">
+                <img class="img-fluid rounded w-75 wow @*zoomIn*@" data-wow-delay="0.1s" src="~/img/about-1.jpg" style="margin-top: 0%;">
+                </div>
+                <div class="col-6 text-start">
+                <img class="img-fluid rounded w-100 wow @*zoomIn*@" data-wow-delay="0.3s" src="~/img/about-2.jpg">
+                </div>
+                <div class="col-6 text-end">
+                <img class="img-fluid rounded w-50 wow @*zoomIn*@" data-wow-delay="0.5s" src="~/img/about-3.jpg">
+                </div>
+                <div class="col-6 text-start">
+                <img class="img-fluid rounded w-75 wow @*zoomIn*@" data-wow-delay="0.7s" src="~/img/about-4.jpg">
+                </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="wow @*fadeInUp*@" data-wow-delay="0.2s">
+                    <h6 class="section-title text-center text-primary text-uppercase">@ViewData["Title"]</h6>
+                    <h1 class="mb-5">Start <span class="text-primary text-uppercase"> Exploring</span></h1>
+                    <form method="post">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="firstname" autocomplete="firstname" aria-required="true" placeholder="First Name" asp-for="@Model.FirstName">
+                                    <label for="secondname">First Name</label>
+                                    <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="lastname" autocomplete="lastname" aria-required="true" placeholder="Last Name" asp-for="@Model.LastName">
+                                    <label for="lastname">Last Name</label>
+                                    <span asp-validation-for="@Model.LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="email" autocomplete="email" aria-required="true" placeholder="Email" asp-for="@Model.Email">
+                                    <label for="email">Email</label>
+                                    <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="phonenumber" autocomplete="phonenumber" aria-required="true" placeholder="Phone Number" asp-for="@Model.PhoneNumber">
+                                    <label for="phonenumber">Phone Number</label>
+                                    <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">        
+                                    <input type="checkbox" name="IsAdult" asp-for="@Model.IsAdult" style="height: 40px; width: 40px" />
+                                    <label style="margin-left: 40px" for="IsAdult" asp-for="@Model.IsAdult">Is Adult</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3" type="submit">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Client End -->
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}

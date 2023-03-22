@@ -3,6 +3,7 @@ using HotelManager.Controllers;
 using HotelManager.Core.Services.User;
 using HotelManager.Core.Services.Room;
 using HotelManager.Core.Services.RoomType;
+using HotelManager.Core.Services.Client;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -15,6 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<IRoomTypeService, RoomTypeService>();
+            services.AddScoped<IClientService, ClientService>();
 
             return services;
         }

@@ -93,6 +93,7 @@
                             @if(User.Identity.IsAuthenticated)
                             {
                                <a asp-controller="Reservation" asp-action="All" class="nav-item nav-link">Reservations</a>
+                               <a asp-controller="Client" asp-action="All" class="nav-item nav-link">Clients</a>
                             }
                             <a asp-area="" asp-controller="Room" asp-action="All" class="nav-item nav-link">Rooms</a>
 @*                            <div class="nav-item dropdown">

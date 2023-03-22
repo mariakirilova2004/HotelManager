@@ -3,7 +3,7 @@ using HotelManager.Infrastructure.Data.Еntities.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WeVolunteer.Extensions;
+using HotelManager.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
