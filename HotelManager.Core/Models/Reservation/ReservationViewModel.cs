@@ -8,5 +8,11 @@ namespace HotelManager.Core.Models.Reservation
 {
     public class ReservationViewModel
     {
+        public int RoomNumber { get; set; }
+        public DateTime Arrival { get; set; }
+        public DateTime Leaving { get; set; }
+        public bool IsBreakfastIncluded { get; set; }
+        public bool IsAllInclusive { get; set; }
+        public decimal Total { get; set; }
     }
 }

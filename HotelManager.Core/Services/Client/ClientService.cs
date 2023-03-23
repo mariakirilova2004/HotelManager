@@ -136,12 +136,23 @@ namespace HotelManager.Core.Services.Client
             return this.dbContext.Clients.Where(c => c.Id == id).FirstOrDefault() != null;
         }
 
-        public DetailsClientViewModel CauseDetailsById(int id)
-        {
+        public DetailsClientViewModel ReservationDetails(int id, int currentPage, int reservationsPerPage)
+        {            
             var client = this.dbContext.Clients.Where(c => c.Id == id).Include(c => c.Reservations).FirstOrDefault();
-            var reservations = client.Reservations.Select(u => new ReservationViewModel { }).ToList();
+            var reservations = client.Reservations
+                                     .Skip((currentPage - 1) * reservationsPerPage)
+                                     .Take(reservationsPerPage)
+                                     .Select(r => new ReservationViewModel 
+                                     { 
+                                         RoomNumber = r.Room.Number,
+                                         Arrival = r.Arrival,
+                                         Leaving = r.Leaving,
+                                         IsBreakfastIncluded = r.IsBreakfastIncluded,
+                                         IsAllInclusive = r.IsAllInclusive,
+                                         Total = r.Total
+                                     }).ToList();
 
-            return  new DetailsClientViewModel()
+            var newClient =  new DetailsClientViewModel()
                     {
                         Id = client.Id,
                         FirstName = client.FirstName,
@@ -151,6 +162,16 @@ namespace HotelManager.Core.Services.Client
                         IsAdult = client.IsAdult,
                         Reservations = reservations
                     };
+
+            reservations = reservations.OrderByDescending(c => c.Leaving).ToList();
+
+            var totalReservations = reservations.Count();
+
+            newClient.ReservationsPerPage = reservationsPerPage;
+            newClient.TotalReservationsCount = totalReservations;
+            newClient.Reservations = reservations;
+
+            return newClient;
         }
     }
 }

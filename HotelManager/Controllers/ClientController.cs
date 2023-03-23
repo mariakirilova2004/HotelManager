@@ -190,25 +190,22 @@ namespace HotelManager.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(int id, string information)
+        public async Task<IActionResult> Details(DetailsClientViewModel query)
         {
-            if (! this.clientService.Exists(id))
+            if (! this.clientService.Exists(query.Id))
             {
                 TempData[MessageConstant.WarningMessage] = "There is no such client!";
                 this.logger.LogInformation("User {0} tried to access invalid client!", this.User.Id());
                 return RedirectToAction(nameof(All));
             }
 
-            var clientModel = this.clientService.CauseDetailsById(id);
+            var queryResult = this.clientService.ReservationDetails(
+                query.Id,
+                query.CurrentPage,
+                query.ReservationsPerPage);
 
-            if (information != clientModel.GetInformation())
-            {
-                TempData[MessageConstant.WarningMessage] = "There is no such client!";
-                this.logger.LogInformation("User {0} tried to access invalid client!", this.User.Id());
-                return RedirectToAction(nameof(All));
-            }
 
-            return View(clientModel);
+            return View(queryResult);
         }
     }
 }

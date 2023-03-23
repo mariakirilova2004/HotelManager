@@ -18,6 +18,6 @@ namespace HotelManager.Core.Services.Client
         public bool EmailExists(string email, int id);
         public bool PhoneNumberExists(string phoneNumber, int id);
         bool Exists(int id);
-        DetailsClientViewModel CauseDetailsById(int id);
+        DetailsClientViewModel ReservationDetails(int id, int currentPage, int reservationsPerPage);
     }
 }
