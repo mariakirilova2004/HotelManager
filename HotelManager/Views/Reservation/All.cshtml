@@ -1,47 +1,35 @@
-﻿@using HotelManager.Core.Models.Room
-@model AllRoomsQueryModel;
+﻿@using HotelManager.Core.Models.Reservation
+@model AllReservationQueryModel;
 
 <!-- Rooms Start -->
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center">
-            <h6 class="section-title text-center text-primary text-uppercase">Our Rooms</h6>
-            <h1 class="mb-5">Explore Our <span class="text-primary text-uppercase">Rooms</span></h1>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <a class="btn btn-primary bg-dark" asp-area="Admin" asp-controller="Room" asp-action="Add" class="dropdown-item">Add New Room</a>
-            }
+            <h6 class="section-title text-center text-primary text-uppercase">Our Reservations</h6>
+            <h1 class="mb-5">Explore Our <span class="text-primary text-uppercase">Reservations</span></h1>
+            <a class="btn btn-primary bg-dark" asp-area="" asp-controller="Reservation" asp-action="Add" class="dropdown-item">Add New Reservation</a>
         </div>
         <form style="margin: 50px">
             <div class="row">
                 <div class="form-group col-md-3">
-                    <label asp-for="Capacity"></label>
-                    <input type="number" min="0" asp-for="Capacity" class="form-control" placeholder="...">
+                    <label asp-for="SearchTerm"></label>
+                    <input asp-for="SearchTerm" class="form-control" placeholder="...">
                 </div>
 
                 <div class="form-group col col-md-3">
                     <div class="form-group">
-                        <label asp-for="Type">Type of Room</label>
-                        <select asp-for="Type" class="form-control">
-                            <option value="All">All</option>
-                            @foreach (var type in Model.RoomTypes)
-                            {
-                                <option value="@type.Type">@type.Type</option>
-                            }
+                        <label asp-for="SearchTermOn">Search Term in Field</label>
+                        <select asp-for="SearchTermOn" class="form-control">
+                            <option value="UserName">RoomNumber</option>
+                            <option value="FirstName">User Name</option>
+                            <option value="MiddleName">Client Name</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group col col-md-3">
-                    <div class="form-floating" style="margin-left: 10px">
-                        <input type="checkbox" asp-for="Availability"  style="margin-top: 20px; height: 40px; width: 40px" />
-                        <label style="margin-left: 40px" asp-for="Availability">Only Available Rooms</label>
-                    </div>
-                </div>
-
-                <div class="form-group col col-md-3">
                     <div class="form-group">
-                        <label asp-for="RoomsPerPage">Rooms per Page</label>
-                        <select asp-for="RoomsPerPage" class="form-control">
+                        <label asp-for="ReservationsPerPage">Reservations Per Page</label>
+                        <select asp-for="ReservationsPerPage" class="form-control">
                             <option value="10">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
@@ -62,8 +50,8 @@
                 previousPage = 1;
             }
 
-            var maxPage = Math.Ceiling((double)Model.TotalRoomsCount /
-            Model.RoomsPerPage);
+            var maxPage = Math.Ceiling((double)Model.TotalReservationsCount /
+            Model.ReservationsPerPage);
         }
 
         <div class="row md-4">
@@ -72,14 +60,13 @@
                    asp-controller="Room"
                    asp-action="All"
                    asp-route-currentPage="@previousPage"
-                   asp-route-Capacity="@((int)Model.Capacity)"
-                   asp-route-Type="@Model.Type"
-                   asp-route-Availability="@Model.Availability"><<</a>
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   asp-route-SearchTermOn="@Model.SearchTermOn"><<</a>
             </div>
 
             @{
                 var shouldButtonBeDisabled = Model.CurrentPage == maxPage ||
-                !Model.Rooms.Any();
+                !Model.Reservations.Any();
             }
 
             <div class="col-md-6 d-grid gap-2 d-mb-flex justify-content-md-end">
@@ -88,19 +75,18 @@
                    asp-controller="Room"
                    asp-action="All"
                    asp-route-currentPage="@(Model.CurrentPage + 1)"
-                   asp-route-Capacity="@((int)Model.Capacity)"
-                   asp-route-Type="@Model.Type"
-                   asp-route-Availability="@Model.Availability">>></a>
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   asp-route-SearchTermOn="@Model.SearchTermOn">>></a>
             </div>
         </div>
 
         <div class="row g-4">
-            @if (!Model.Rooms.Any())
+            @if (!Model.Reservations.Any())
             {
                 <h2 class="text-center">No rooms found by the given criteria!</h2>
             }
 
-            @if (@Model.Rooms == null)
+            @if (@Model.Reservations == null)
             {
                 <div class="col-lg-12 col-12 text-center mb-4">
                     <h3>Coming soon...</h3>
@@ -108,9 +94,9 @@
             }
             else
             {
-                @foreach (var room in @Model.Rooms)
+                @foreach (var reservation in @Model.Reservations)
                 {
-                    <partial name="_RoomPartial" model="room"/>
+                    <partial name="_ReservationPartial" model="reservation"/>
                 }
             }
         </div>
