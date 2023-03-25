@@ -19,5 +19,8 @@ namespace HotelManager.Core.Services.Client
         public bool PhoneNumberExists(string phoneNumber, int id);
         bool Exists(int id);
         DetailsClientViewModel ReservationDetails(int id, int currentPage, int reservationsPerPage);
+
+        List<ReservationClientModel> ClientsForReservationDetails();
+        Infrastructure.Data.Еntities.Client GetClientById(int id);
     }
 }

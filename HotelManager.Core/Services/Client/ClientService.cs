@@ -138,7 +138,7 @@ namespace HotelManager.Core.Services.Client
 
         public DetailsClientViewModel ReservationDetails(int id, int currentPage, int reservationsPerPage)
         {            
-            var client = this.dbContext.Clients.Where(c => c.Id == id).Include(c => c.Reservations).FirstOrDefault();
+            var client = this.dbContext.Clients.Where(c => c.Id == id).Include(c => c.Reservations).ThenInclude(r => r.Room).FirstOrDefault();
             var reservations = client.Reservations
                                      .Skip((currentPage - 1) * reservationsPerPage)
                                      .Take(reservationsPerPage)
@@ -172,6 +172,23 @@ namespace HotelManager.Core.Services.Client
             newClient.Reservations = reservations;
 
             return newClient;
+        }
+
+        List<ReservationClientModel> IClientService.ClientsForReservationDetails()
+        {
+            return this.dbContext.Clients.Select(c => new ReservationClientModel()
+            {
+                Id = c.Id,
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+                PhoneNumber = c.PhoneNumber
+            })
+            .ToList();
+        }
+
+        public Infrastructure.Data.Еntities.Client GetClientById(int id)
+        {
+            return this.dbContext.Clients.Where(c => c.Id == id).FirstOrDefault();
         }
     }
 }

@@ -1,0 +1,118 @@
+﻿@using HotelManager.Core.Models.Client
+@model DetailsClientViewModel
+
+<!-- Details Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+                <h6 class="section-title text-start text-primary text-uppercase">@Model.FirstName @Model.LastName's Details</h6>
+                <h1 class="mb-4">Welcome to <span class="text-primary text-uppercase">their information</span></h1>
+                <div class="row g-3 pb-4">
+                    <div class="col-sm-4 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="border rounded p-1">
+                            <div class="border rounded text-center p-4">
+                                <i class="fa fa-phone fa-2x text-primary mb-2"></i>
+                                <h6 class="mb-1" >@Model.PhoneNumber</h6>
+                                <p class="mb-0">Phone Number</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 wow fadeIn" data-wow-delay="0.3s">
+                        <div class="border rounded p-1">
+                            <div class="border rounded text-center p-4">
+                                <i class="fa fa-envelope fa-2x text-primary mb-2"></i>
+                                <p class="mb-1" style="font-size:small">@Model.Email</p>
+                                <p class="mb-0">Email</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 wow fadeIn" data-wow-delay="0.5s">
+                        <div class="border rounded p-1">
+                            <div class="border rounded text-center p-4">
+                                <i class="fa fa-users fa-2x text-primary mb-2"></i>
+                                @{
+                                    if (Model.IsAdult)
+                                    {
+                                        <h6 class="mb-1">YES</h6>
+                                    }
+                                    else
+                                    {
+                                        <h6 class="mb-1">NO</h6>
+                                    }
+                                }
+                                <p class="mb-0">Do they have 18?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    <div class="container">
+                        <div class="text-center">
+                            <h6 class="section-title text-center text-primary text-uppercase">@Model.FirstName's Reservations</h6>
+                            <h1 class="mb-5">Explore their <span class="text-primary text-uppercase">Reservations</span></h1>
+                        </div>
+                     
+
+                        @{
+                            var previousPage = Model.CurrentPage - 1;
+                            if (previousPage < 1)
+                            {
+                                previousPage = 1;
+                            }
+
+                            var maxPage = Math.Ceiling((double)Model.TotalReservationsCount /
+                            Model.ReservationsPerPage);
+                        }
+
+                        <div class="row md-4">
+                            <div class="col-md-6 d-grid gap-2 d-mb-flex justify-content-md-start">
+                                <a class="btn btn-primary @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
+                                   asp-controller="Reservation"
+                                   asp-action="All"
+                                   asp-route-currentPage="@previousPage"><<</a>
+                            </div>
+
+                            @{
+                                var shouldButtonBeDisabled = Model.CurrentPage == maxPage ||
+            !Model.Reservations.Any();
+                            }
+
+                            <div class="col-md-6 d-grid gap-2 d-mb-flex justify-content-md-end">
+                                <a class="btn btn-primary
+                    @(shouldButtonBeDisabled ? "disabled" : string.Empty)"
+                                   asp-controller="Reservation"
+                                   asp-action="All"
+                                   asp-route-currentPage="@(Model.CurrentPage + 1)">>></a>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            @if (!Model.Reservations.Any())
+                            {
+                                <h2 class="text-center">No reservations found by the given criteria!</h2>
+                            }
+
+                            @if (@Model.Reservations == null)
+                            {
+                                <div class="col-lg-12 col-12 text-center mb-4">
+                                    <h3>Coming soon...</h3>
+                                </div>
+                            }
+                            else
+                            {
+                                @foreach (var reservation in @Model.Reservations)
+                                {
+                                    <partial name="_ReservationPartial" model="reservation" />
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Details End -->

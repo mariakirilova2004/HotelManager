@@ -20,9 +20,9 @@
                     <div class="form-group">
                         <label asp-for="SearchTermOn">Search Term in Field</label>
                         <select asp-for="SearchTermOn" class="form-control">
-                            <option value="UserName">RoomNumber</option>
-                            <option value="FirstName">User Name</option>
-                            <option value="MiddleName">Client Name</option>
+                            <option value="RoomNumber">Room Number</option>
+                            <option value="UserName">User Name</option>
+                            <option value="PhoneNumber">Phone Number</option>
                         </select>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
         <div class="row g-4">
             @if (!Model.Reservations.Any())
             {
-                <h2 class="text-center">No rooms found by the given criteria!</h2>
+                <h2 class="text-center">No reservations found by the given criteria!</h2>
             }
 
             @if (@Model.Reservations == null)

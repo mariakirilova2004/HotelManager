@@ -1,4 +1,5 @@
 ﻿using HotelManager.Core.Models.Client;
+using HotelManager.Core.Models.Reservation;
 using HotelManager.Core.Models.Room;
 using HotelManager.Core.Models.User;
 using System;
@@ -31,6 +32,11 @@ namespace HotelManager.Core.Extensions
         public static string GetInformation(this RoomViewModel room)
         {
             return room.Capacity + "_" + room.Number + "_" + room.RoomType;
+        }
+
+        public static string GetInformation(this ReservationViewModel reservation)
+        {
+            return reservation.RoomNumber + "_" + reservation.Id + "_" + reservation.Leaving;
         }
     }
 }

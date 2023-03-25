@@ -135,5 +135,16 @@ namespace HotelManager.Core.Services.Room
         {
             return this.dbContext.Rooms.Any(r => r.Number == number && r.Id != id);
         }
+
+        List<ReservationRoomModel> IRoomService.RoomsForReservationDetails()
+        {
+            return this.dbContext.Rooms.Select(r => new ReservationRoomModel()
+            {
+                Id = r.Id,
+                Number = r.Number,
+                RoomType = r.RoomType.Type
+            })
+            .ToList();
+        }
     }
 }

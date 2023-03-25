@@ -19,7 +19,7 @@ namespace HotelManager.Core.Models.Reservation
         public int RoomNumberId { get; set; }
 
         [Required]
-        public string UserId { get; set; }
+        public int ClientId { get; set; }
 
         [Required]
         [CustomArrivalDateAttribute]

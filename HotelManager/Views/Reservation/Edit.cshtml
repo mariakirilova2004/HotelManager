@@ -1,8 +1,8 @@
-﻿@using HotelManager.Core.Models.Room
-@model AddRoomFormModel
+﻿@using HotelManager.Core.Models.Reservation
+@model AddReservationFormModel
 
 @{
-    ViewData["Title"] = $"Edit Room {@Model.Number}";
+    ViewData["Title"] = $"Edit Reservation No:{@Model.Id}";
 }
 
 <!-- Booking Start -->
@@ -29,58 +29,58 @@
                 <div class="wow @*fadeInUp*@" data-wow-delay="0.2s">
                     <h6 class="section-title text-center text-primary text-uppercase">@ViewData["Title"]</h6>
                     <h1 class="mb-5">Start <span class="text-primary text-uppercase"> Exploring</span></h1>
-                    <form method="post">
+                                        <form method="post">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col col-md-6">
                                 <div class="form-floating">
-                                    <input type="number" value="@Model.Number" class="form-control" id="number" autocomplete="number" aria-required="true" placeholder="Number" asp-for="@Model.Number">
-                                    <label for="number">Room Number</label>
-                                    <span asp-validation-for="@Model.Number" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="number" value="@Model.Capacity" class="form-control" id="capacity" autocomplete="capacity" aria-required="true" placeholder="First Name" asp-for="@Model.Capacity">
-                                    <label for="capacity">Capacity</label>
-                                    <span asp-validation-for="@Model.Capacity" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <select asp-for="RoomTypeId" class="form-control" id ="roomtype">
-                                        @foreach (var type in Model.RoomTypes)
+                                    <select asp-for="RoomNumberId" class="form-control" id="RoomNumberId">
+                                        @foreach (var room in Model.Rooms)
                                         {
-                                            <option value="@type.Id" placeholder="">@type.Type</option>
+                                            <option value="@room.Id" placeholder="">@room.Number - @room.RoomType</option>
                                         }
                                     </select>
-                                    <label for="roomtype">Type of Room</label>
+                                    <label for="RoomNumberId">Room</label>
+                                </div>
+                            </div>
+                            <div class="col col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="ClientId" class="form-control" id="UserId">
+                                        @foreach (var client in Model.Clients)
+                                        {
+                                            <option value="@client.Id" placeholder="">@client.FirstName @client.LastName - @client.PhoneNumber.Skip(7)</option>
+                                        }
+                                    </select>
+                                    <label for="ClientId">Main Client</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="checkbox" asp-for="IsFree"  style="margin-top: 20px; height: 40px; width: 40px" />
-                                    <label style="margin-left: 40px" asp-for="IsFree">Only Available Rooms</label>
+                                    <input type="date" value="01/01/2023" class="form-control" id="arrival" autocomplete="arrival" aria-required="true" placeholder="Arrival Date" asp-for="@Model.Arrival">
+                                    <label for="arrival">Arrival Date</label>
+                                    <span asp-validation-for="@Model.Arrival" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="number" value="@Model.PriceForAdultBed" class="form-control" id="priceForAdultBed" autocomplete="priceForAdultBed" aria-required="true" placeholder="Price For Adult Bed" asp-for="@Model.PriceForAdultBed">
-                                    <label for="priceForAdultBed">Price For Adult Bed</label>
-                                    <span asp-validation-for="@Model.PriceForAdultBed" class="text-danger"></span>
+                                    <input type="date" value="01/01/2023" class="form-control" id="leaving" autocomplete="leaving" aria-required="true" placeholder="Leaving Date" asp-for="@Model.Leaving">
+                                    <label for="leaving">Leaving Date</label>
+                                    <span asp-validation-for="@Model.Leaving" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="number" value="@Model.PriceForChildBed" class="form-control" id="priceForChildBed" aria-required="true" placeholder="Price For Child Bed" asp-for="@Model.PriceForChildBed">
-                                    <label for="priceForChildBed">Price For Child Bed</label>
-                                    <span asp-validation-for="@Model.PriceForChildBed" class="text-danger"></span>
+                                    <input type="checkbox" name="IsBreakfastIncluded" asp-for="@Model.IsBreakfastIncluded" style="height: 40px; width: 40px" />
+                                    <label style="margin-left: 40px" for="IsAdult" asp-for="@Model.IsBreakfastIncluded">Breakfast Included</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <button class="btn btn-primary w-100 py-3" type="submit" asp-area="Admin" asp-controller="Room" asp-action="Edit" formmethod="post">Edit</button>
+                                <div class="form-floating">
+                                    <input type="checkbox" name="IsAllInclusive" asp-for="@Model.IsAllInclusive" style="height: 40px; width: 40px" />
+                                    <label style="margin-left: 40px" for="IsAllInclusive" asp-for="@Model.IsAllInclusive">Is All Inclusive</label>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <a class="btn btn-primary w-100 py-3" asp-area="Admin" asp-controller="Room" asp-action="All"> Close</a>
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3" type="submit">Add</button>
                             </div>
                         </div>
                     </form>

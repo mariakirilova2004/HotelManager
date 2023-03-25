@@ -20,5 +20,6 @@ namespace HotelManager.Core.Services.Room
         Task Delete(int id);
         AddRoomFormModel GetById(int id);
         Task Edit(AddRoomFormModel model);
+        List<ReservationRoomModel> RoomsForReservationDetails();
     }
 }

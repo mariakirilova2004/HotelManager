@@ -9,31 +9,40 @@
                 <h5 class="mb-0">@Model.RoomNumber - $ @Model.Total</h5>
             </div>
             <div class="d-flex mb-3">
-                <small class="border-end me-3 pe-3"><i class="fa-solid fa-plane-arrival text-primary me-2"></i>@Model.Arrival</small>
-                <small class="border-end me-3 pe-3"><i class="fa-solid fa-plane-departure text-primary me-2"></i>@Model.Leaving</small>
+                <small class="border-end me-3 pe-3"><i class="fa fa-home text-primary me-2"></i>@Model.Arrival</small>
+                <small class="border-end me-3 pe-3"><i class="fas fa-plane-departure text-primary me-2"></i>@Model.Leaving</small>
             </div>
-            <p class="text-body mb-3">Breakfast Included: 
             @{
-                if (Model.IsBreakfastIncluded)
-                {
-                    <p>Yes</p>
-                }
-                else
-                {
-                    <p>No</p>
-                }
-            }</p>
-            <p class="text-body mb-3">All Inclusive: 
+                    if (Model.IsBreakfastIncluded)
+                    {
+                        <p class="text-body mb-3">Breakfast Included: Yes</p>
+                    }
+                    else
+                    {
+                        <p class="text-body mb-3">Breakfast Included: No</p>
+                    }
+            }
             @{
-                if (Model.IsAllInclusive)
-                {
-                    <p>Yes</p>
-                }
-                else
-                {
-                    <p>No</p>
-                }
-            }</p>
+                    if (Model.IsAllInclusive)
+                    {
+                        <p class="text-body mb-3">All Inclusive: Yes</p>
+                    }
+                    else
+                    {
+                        <p class="text-body mb-3">All Inclusive: No</p>
+                    }
+            }
+            <div class="d-flex justify-content-between">
+                <form asp-area="" asp-controller="Reservation" asp-action="Edit" asp-route-id="@Model.Id" asp-route-information="@Model.GetInformation()" method="get">
+                    <button type="submit" class="btn btn-sm btn-dark rounded py-2 px-4" href="">Edit</button>
+                </form>
+                <form asp-area="" asp-controller="Reservation" asp-action="Details" asp-route-id="@Model.Id" asp-route-information="@Model.GetInformation()" method="get">
+                    <button type="submit" class="btn btn-sm btn-primary rounded py-2 px-4" href="">Details</button>
+                </form>
+                <form asp-area="" asp-controller="Reservation" asp-action="Delete" asp-route-id="@Model.Id" asp-route-information="@Model.GetInformation()" method="post">
+                   <button type="submit" class="btn btn-sm btn-dark rounded py-2 px-4">Delete</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

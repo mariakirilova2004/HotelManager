@@ -8,6 +8,7 @@ namespace HotelManager.Core.Models.Reservation
 {
     public class ReservationViewModel
     {
+        public int Id { get; set; }
         public int RoomNumber { get; set; }
         public DateTime Arrival { get; set; }
         public DateTime Leaving { get; set; }
