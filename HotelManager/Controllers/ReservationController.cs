@@ -77,6 +77,15 @@ namespace HotelManager.Controllers
                 return View(model);
             }
 
+            if(!reservationService.IsFreeThatTime(model.Arrival, model.Leaving, model.RoomNumberId))
+            {
+                TempData[MessageConstant.ErrorMessage] = "These dates are not available";
+                model.Clients = clientService.ClientsForReservationDetails();
+                model.Rooms = roomService.RoomsForReservationDetails();
+                return View(model);
+            }
+
+
             if(model.Leaving.CompareTo(model.Arrival) <= 0)
             {
                 TempData[MessageConstant.ErrorMessage] = "Arrival date should be before leaving date!";
@@ -126,78 +135,152 @@ namespace HotelManager.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        // Update data of a room
+        //Update data of a room
 
-        //[HttpGet]
-        //public async Task<IActionResult> Edit(int Id)
-        //{
-        //    if (!User.IsAdmin())
-        //    {
-        //        TempData[MessageConstant.WarningMessage] = "You cannot edit Rooms!";
-        //        this.logger.LogInformation("User {0} tried to edit room, but they are not Admin!", this.User.Id());
-        //        return RedirectToAction(nameof(All));
-        //    }
+       [HttpGet]
+        public async Task<IActionResult> Edit(int Id)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                TempData[MessageConstant.WarningMessage] = "You cannot edit Reservations!";
+                this.logger.LogInformation("User {0} tried to edit reservation, but they are not User!", this.User.Id());
+                return RedirectToAction("Index", "Home");
+            };
 
-        //    var model = roomService.GetById(Id);
+            var model = reservationService.GetById(Id);
 
-        //    if (model == null)
-        //    {
-        //        TempData[MessageConstant.WarningMessage] = "No such Room!";
-        //        return RedirectToAction(nameof(All));
-        //    }
+            if (model == null)
+            {
+                TempData[MessageConstant.WarningMessage] = "No such Reservation!";
+                return RedirectToAction(nameof(All));
+            }
 
-        //    return View(model);
-        //}
+            model.Clients = clientService.ClientsForReservationDetails();
+            model.Rooms = roomService.RoomsForReservationDetails();
+            return View(model);
+        }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Edit(AddRoomFormModel model)
-        //{
+        [HttpPost]
+        public async Task<IActionResult> Edit(AddReservationFormModel model)
+        {
 
-        //    if (!ModelState.IsValid)
-        //    {
-        //        TempData[MessageConstant.ErrorMessage] = "Invalid edit";
-        //        return View(model);
-        //    }
+            if (!ModelState.IsValid)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid edit";
+                model.Clients = clientService.ClientsForReservationDetails();
+                model.Rooms = roomService.RoomsForReservationDetails();
+                return View(model);
+            }
 
-        //    if (roomService.NumberExists(model.Number, model.Id))
-        //    {
-        //        TempData[MessageConstant.ErrorMessage] = "Тhere is a room with this Room Number";
-        //        model.RoomTypes = roomTypeService.AllAdd();
-        //        return View(model);
-        //    }
+            if (!reservationService.Exists(model.Id))
+            {
+                TempData[MessageConstant.ErrorMessage] = "Тhere is no such reservation";
+                return RedirectToAction(nameof(All));
+            }
 
-        //    try
-        //    {
-        //        await this.roomService.Edit(model);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        this.logger.LogInformation("Room {0} did not manage to be edited!", model.Number);
-        //        TempData[MessageConstant.ErrorMessage] = "Unsuccessful editing of a room";
-        //        model.RoomTypes = roomTypeService.AllAdd();
-        //        return View(model);
-        //    }
+            try
+            {
+                await this.reservationService.Edit(model, User.Id());
+                TempData[MessageConstant.SuccessMessage] = "Successfully edited reservation";
+            }
+            catch (Exception)
+            {
+                this.logger.LogInformation("Reservation {0} did not manage to be edited!", model.Id);
+                TempData[MessageConstant.ErrorMessage] = "Unsuccessful editing of a reservation";
+                model.Clients = clientService.ClientsForReservationDetails();
+                model.Rooms = roomService.RoomsForReservationDetails();
+                return View(model);
+            }
 
-        //    return RedirectToAction("All", "Room");
-        //}
+            return RedirectToAction("All", "Reservation");
+        }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Details(DetailsClientViewModel query)
-        //{
-        //    if (!this.clientService.Exists(query.Id))
-        //    {
-        //        TempData[MessageConstant.WarningMessage] = "There is no such client!";
-        //        this.logger.LogInformation("User {0} tried to access invalid client!", this.User.Id());
-        //        return RedirectToAction(nameof(All));
-        //    }
+        [HttpGet]
+        public async Task<IActionResult> Details(DetailsReservationViewModel query)
+        {
+            if (!this.reservationService.Exists(query.Id))
+            {
+                TempData[MessageConstant.WarningMessage] = "There is no such reservation!";
+                this.logger.LogInformation("User {0} tried to access invalid reservation!", this.User.Id());
+                return RedirectToAction(nameof(All));
+            }
 
-        //    var queryResult = this.clientService.ReservationDetails(
-        //        query.Id,
-        //        query.CurrentPage,
-        //        query.ReservationsPerPage);
+            var queryResult = this.reservationService.ReservationDetails(
+                query.Id,
+                query.CurrentPage,
+                query.ClientsPerPage);
 
 
-        //    return View(queryResult);
-        //}
+            return View(queryResult);
+        }
+
+        [HttpGet]
+        public IActionResult AddClient(int id)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                TempData[MessageConstant.WarningMessage] = "You cannot add clients to Reservation!";
+                this.logger.LogInformation("User {0} tried to add client to reservation, but they are not User!", this.User.Id());
+                return RedirectToAction("Index", "Home");
+            };
+
+            var model = new AddClientReservationFormModel()
+            {
+                Id = id,
+                Clients = reservationService.ClientsForReservationDetails(id)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClient(AddClientReservationFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid add";
+                model.Clients = clientService.ClientsForReservationDetails();
+                return View(model);
+            }
+
+            try
+            {
+                await reservationService.AddClient(model);
+            }
+            catch (Exception e)
+            {
+                TempData[MessageConstant.ErrorMessage] = $"Unsuccessfully added client to reservation";
+                model.Clients = clientService.ClientsForReservationDetails();
+                return View(model);
+            }
+
+            TempData[MessageConstant.SuccessMessage] = $"Reservation Number {model.Id} has been successfully edited";
+            return RedirectToAction(nameof(Details), new { id = model.Id });
+        }
+
+        //Delete the room
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClient(int id, int clientId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                TempData[MessageConstant.WarningMessage] = "You cannot delete Reservation's Client!";
+                this.logger.LogInformation("User {0} tried to delete reservation's client, but they are not User!", this.User.Id());
+                return RedirectToAction("Index", "Home");
+            };
+
+            try
+            {
+                await this.reservationService.DeleteClient(id, clientId);
+                TempData[MessageConstant.SuccessMessage] = "Successfully deleted reservation's client";
+            }
+            catch (Exception)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Unsuccessfully deleted reservation's client";
+                this.logger.LogInformation("Reservation's client could not be deleted!");
+            }
+            return RedirectToAction(nameof(Details), new { id = id });
+        }
     }
 }

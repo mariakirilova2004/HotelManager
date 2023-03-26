@@ -66,7 +66,7 @@ namespace HotelManager.Controllers
 
             var user = await userManager.FindByEmailAsync(model.Email);
 
-            if (user != null)
+            if (user != null && (user.DismissionDate == null || user.DismissionDate > DateTime.Now))
             {
                 var result = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
 

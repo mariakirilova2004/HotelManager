@@ -42,27 +42,16 @@
                                     <label for="RoomNumberId">Room</label>
                                 </div>
                             </div>
-                            <div class="col col-md-6">
-                                <div class="form-floating">
-                                    <select asp-for="ClientId" class="form-control" id="UserId">
-                                        @foreach (var client in Model.Clients)
-                                        {
-                                            <option value="@client.Id" placeholder="">@client.FirstName @client.LastName - @client.PhoneNumber.Skip(7)</option>
-                                        }
-                                    </select>
-                                    <label for="ClientId">Main Client</label>
-                                </div>
-                            </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="date" value="01/01/2023" class="form-control" id="arrival" autocomplete="arrival" aria-required="true" placeholder="Arrival Date" asp-for="@Model.Arrival">
+                                    <input type="date" class="form-control" id="arrival" autocomplete="arrival" aria-required="true" placeholder="Arrival Date" asp-for="@Model.Arrival">
                                     <label for="arrival">Arrival Date</label>
                                     <span asp-validation-for="@Model.Arrival" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="date" value="01/01/2023" class="form-control" id="leaving" autocomplete="leaving" aria-required="true" placeholder="Leaving Date" asp-for="@Model.Leaving">
+                                    <input type="date" class="form-control" id="leaving" autocomplete="leaving" aria-required="true" placeholder="Leaving Date" asp-for="@Model.Leaving">
                                     <label for="leaving">Leaving Date</label>
                                     <span asp-validation-for="@Model.Leaving" class="text-danger"></span>
                                 </div>

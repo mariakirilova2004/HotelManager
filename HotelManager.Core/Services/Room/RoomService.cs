@@ -1,5 +1,6 @@
 ﻿using Ganss.Xss;
 using HotelManager.Core.Models.Room;
+using HotelManager.Core.Services.Reservation;
 using HotelManager.Core.Services.RoomType;
 using HotelManager.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +19,8 @@ namespace HotelManager.Core.Services.Room
         private readonly HotelManagerDbContext dbContext;
         private IRoomTypeService roomTypeService;
 
-        public RoomService(HotelManagerDbContext _dbContext, IRoomTypeService _roomTypeService)
+        public RoomService(HotelManagerDbContext _dbContext,
+                           IRoomTypeService _roomTypeService)
         {
             this.dbContext = _dbContext;
             this.roomTypeService = _roomTypeService;
@@ -136,15 +138,17 @@ namespace HotelManager.Core.Services.Room
             return this.dbContext.Rooms.Any(r => r.Number == number && r.Id != id);
         }
 
+
         List<ReservationRoomModel> IRoomService.RoomsForReservationDetails()
         {
-            return this.dbContext.Rooms.Select(r => new ReservationRoomModel()
-            {
-                Id = r.Id,
-                Number = r.Number,
-                RoomType = r.RoomType.Type
-            })
-            .ToList();
+            return this.dbContext.Rooms
+                .Select(r => new ReservationRoomModel()
+                {
+                    Id = r.Id,
+                    Number = r.Number,
+                    RoomType = r.RoomType.Type
+                })
+                .ToList();
         }
     }
 }

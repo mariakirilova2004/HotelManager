@@ -12,5 +12,6 @@ namespace HotelManager.Core.Models.Client
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PhoneNumber { get; set; }
+        public bool IsAdult { get; set; }
     }
 }

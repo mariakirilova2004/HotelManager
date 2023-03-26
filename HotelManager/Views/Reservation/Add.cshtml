@@ -42,17 +42,6 @@
                                     <label for="RoomNumberId">Room</label>
                                 </div>
                             </div>
-                            <div class="col col-md-6">
-                                <div class="form-floating">
-                                    <select asp-for="ClientId" class="form-control" id="Clients">
-                                        @foreach (var client in Model.Clients)
-                                        {
-                                            <option value="@client.Id" placeholder="">@client.FirstName @client.LastName - @client.PhoneNumber</option>
-                                        }
-                                    </select>
-                                    <label for="Clients">Main Client</label>
-                                </div>
-                            </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <input type="date" value="01/01/2023" class="form-control" id="arrival" autocomplete="arrival" aria-required="true" placeholder="Arrival Date" asp-for="@Model.Arrival">

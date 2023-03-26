@@ -1,4 +1,5 @@
 ﻿using Ganss.Xss;
+using HotelManager.Core.Models.Client;
 using HotelManager.Core.Models.Reservation;
 using HotelManager.Core.Services.Client;
 using HotelManager.Core.Services.Room;
@@ -39,7 +40,6 @@ namespace HotelManager.Core.Services.Reservation
             reservation.Leaving = model.Leaving;
             reservation.IsBreakfastIncluded = model.IsBreakfastIncluded;
             reservation.IsAllInclusive = model.IsAllInclusive;
-            reservation.Clients.Add(clientService.GetClientById(model.ClientId));
 
             var room = roomService.GetById(model.RoomNumberId);
 
@@ -47,7 +47,8 @@ namespace HotelManager.Core.Services.Reservation
                                              reservation.Clients.Where(c => !c.IsAdult).Count(),
                                              room.PriceForAdultBed,
                                              room.PriceForChildBed,
-                                             room.Capacity);
+                                             room.Capacity,
+                                             (reservation.Leaving - reservation.Arrival).Days);
 
             await this.dbContext.Reservations.AddAsync(reservation);
             await this.dbContext.SaveChangesAsync();
@@ -69,7 +70,7 @@ namespace HotelManager.Core.Services.Reservation
                         reservationsQuery = reservationsQuery.Where(u => u.User.UserName.ToLower().Contains(searchTerm.ToLower())).ToList();
                         break;
                     case "PhoneNumber":
-                        reservationsQuery = reservationsQuery.Where(u => u.Clients?.FirstOrDefault()?.PhoneNumber.CompareTo(searchTerm) == 0 ).ToList();
+                        reservationsQuery = reservationsQuery.Where(u => u.Clients.Any(c => c.PhoneNumber.CompareTo(searchTerm) == 0)).ToList();
                         break;
                 }
             }
@@ -100,16 +101,16 @@ namespace HotelManager.Core.Services.Reservation
             };
         }
 
-        public decimal AnalyzeTotal(int numberAdults, int numberChildren, decimal prizeForAdult, decimal prizeForChildren, int capacity)
+        public decimal AnalyzeTotal(int numberAdults, int numberChildren, decimal prizeForAdult, decimal prizeForChildren, int capacity, int days)
         {
             decimal total = numberAdults * prizeForAdult + numberChildren * prizeForChildren;
 
-            if(numberAdults + numberChildren < capacity)
+            if (numberAdults + numberChildren < capacity)
             {
                 total += (capacity - (numberAdults + numberChildren)) * prizeForChildren;
             }
 
-            return total;
+            return total * days;
         }
 
         public async Task Delete(int id)
@@ -119,93 +120,161 @@ namespace HotelManager.Core.Services.Reservation
             await this.dbContext.SaveChangesAsync();
         }
 
-        //public async Task Edit(AddClientFormModel model)
-        //{
-        //    var sanitalizer = new HtmlSanitizer();
+        public async Task Edit(AddReservationFormModel model, string UserId)
+        {
+            var sanitalizer = new HtmlSanitizer();
 
-        //    var client = this.dbContext.Clients.Where(c => c.Id == model.Id).FirstOrDefault();
+            var reservation = this.dbContext.Reservations.Where(r => r.Id == model.Id).Include(r => r.Clients).FirstOrDefault();
 
-        //    client.FirstName = sanitalizer.Sanitize(model.FirstName);
-        //    client.LastName = sanitalizer.Sanitize(model.LastName);
-        //    client.PhoneNumber = model.PhoneNumber;
-        //    client.Email = sanitalizer.Sanitize(model.Email);
-        //    client.IsAdult = model.IsAdult;
+            reservation.UserId = UserId;
+            reservation.RoomNumberId = model.RoomNumberId;
+            reservation.Arrival = model.Arrival;
+            reservation.Leaving = model.Leaving;
+            reservation.IsBreakfastIncluded = model.IsBreakfastIncluded;
+            reservation.IsAllInclusive = model.IsAllInclusive;
 
-        //    dbContext.Clients.Update(client);
+            dbContext.Reservations.Update(reservation);
 
-        //    try
-        //    {
-        //        await dbContext.SaveChangesAsync();
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
+            try
+            {
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-        //public AddClientFormModel GetById(int id)
-        //{
-        //    return this.dbContext.Clients.Where(c => c.Id == id)?.Select(c => new AddClientFormModel
-        //    {
-        //        Id = c.Id,
-        //        FirstName = c.FirstName,
-        //        LastName = c.LastName,
-        //        PhoneNumber = c.PhoneNumber,
-        //        Email = c.Email,
-        //        IsAdult = c.IsAdult
-        //    })?.FirstOrDefault();
-        //}
-        //public bool EmailExists(string email, int id)
-        //{
-        //    return this.dbContext.Clients.Where(c => c.Email.CompareTo(email) == 0 && c.Id != id).FirstOrDefault() != null;
-        //}
+        public AddReservationFormModel GetById(int id)
+        {
+            return this.dbContext.Reservations.Where(r => r.Id == id)?.Select(r => new AddReservationFormModel
+            {
+                Id = r.Id,
+                RoomNumberId = r.Room.Id,
+                Arrival = r.Arrival,
+                Leaving = r.Leaving,
+                IsAllInclusive = r.IsAllInclusive,
+                IsBreakfastIncluded = r.IsBreakfastIncluded
+            })?.FirstOrDefault();
+        }
 
-        //public bool PhoneNumberExists(string phoneNumber, int id)
-        //{
-        //    return this.dbContext.Clients.Where(c => c.Email.CompareTo(phoneNumber) == 0 && c.Id != id).FirstOrDefault() != null;
-        //}
+        public bool Exists(int id)
+        {
+            return this.dbContext.Reservations.Where(r => r.Id == id).FirstOrDefault() != null;
+        }
 
-        //public bool Exists(int id)
-        //{
-        //    return this.dbContext.Clients.Where(c => c.Id == id).FirstOrDefault() != null;
-        //}
+        public DetailsReservationViewModel ReservationDetails(int id, int currentPage, int clientsPerPage)
+        {
+            var reservation = this.dbContext.Reservations
+                                            .Where(r => r.Id == id)
+                                            .Include(c => c.Clients)
+                                            .Include(r => r.Room)
+                                            .ThenInclude(r => r.RoomType)
+                                            .Include(r => r.User)
+                                            .FirstOrDefault();
 
-        //public DetailsClientViewModel ReservationDetails(int id, int currentPage, int reservationsPerPage)
-        //{
-        //    var client = this.dbContext.Clients.Where(c => c.Id == id).Include(c => c.Reservations).FirstOrDefault();
-        //    var reservations = client.Reservations
-        //                             .Skip((currentPage - 1) * reservationsPerPage)
-        //                             .Take(reservationsPerPage)
-        //                             .Select(r => new ReservationViewModel
-        //                             {
-        //                                 RoomNumber = r.Room.Number,
-        //                                 Arrival = r.Arrival,
-        //                                 Leaving = r.Leaving,
-        //                                 IsBreakfastIncluded = r.IsBreakfastIncluded,
-        //                                 IsAllInclusive = r.IsAllInclusive,
-        //                                 Total = r.Total
-        //                             }).ToList();
+            var clientsQuery = reservation.Clients
+                                     .Skip((currentPage - 1) * clientsPerPage)
+                                     .Take(clientsPerPage)
+                                     .Select(c => new ClientViewModel
+                                     {
+                                         Id = c.Id,
+                                         FirstName = c.FirstName,
+                                         LastName = c.LastName,
+                                         PhoneNumber = c.PhoneNumber,
+                                         IsAdult = c.IsAdult,
+                                         Email = c.Email
+                                     }).ToList();
 
-        //    var newClient = new DetailsClientViewModel()
-        //    {
-        //        Id = client.Id,
-        //        FirstName = client.FirstName,
-        //        LastName = client.LastName,
-        //        Email = client.Email,
-        //        PhoneNumber = client.PhoneNumber,
-        //        IsAdult = client.IsAdult,
-        //        Reservations = reservations
-        //    };
+            var newReservation = new DetailsReservationViewModel()
+            {
+                Id = reservation.Id,
+                RoomNumber = reservation.Room.Number,
+                RoomType = reservation.Room.RoomType.Type,
+                UserName = reservation.User.UserName,
+                Arrival = reservation.Arrival,
+                Leaving = reservation.Leaving,
+                IsBreakfastIncluded = reservation.IsBreakfastIncluded,
+                IsAllInclusive = reservation.IsAllInclusive,
+                Total = reservation.Total
+            };
 
-        //    reservations = reservations.OrderByDescending(c => c.Leaving).ToList();
+            var totalReservations = reservation.Clients.Count();
 
-        //    var totalReservations = reservations.Count();
+            newReservation.ClientsPerPage = clientsPerPage;
+            newReservation.TotalClientsCount = totalReservations;
+            newReservation.CurrentPage = currentPage;
+            newReservation.Clients = clientsQuery;
 
-        //    newClient.ReservationsPerPage = reservationsPerPage;
-        //    newClient.TotalReservationsCount = totalReservations;
-        //    newClient.Reservations = reservations;
+            return newReservation;
+        }
 
-        //    return newClient;
-        //}
+        public async Task AddClient(AddClientReservationFormModel model)
+        {
+            var sanitalizer = new HtmlSanitizer();
+
+            var reservation = this.dbContext.Reservations.Where(r => r.Id == model.Id).Include(r => r.Clients).Include(r => r.Room).FirstOrDefault();
+
+            reservation.Clients.Add(clientService.GetClientById(model.ClientId));
+
+            this.dbContext.Reservations.Update(reservation);
+
+            reservation.Total = AnalyzeTotal(reservation.Clients.Where(c => c.IsAdult).Count(),
+                                             reservation.Clients.Where(c => !c.IsAdult).Count(),
+                                             reservation.Room.PriceForAdultBed,
+                                             reservation.Room.PriceForChildBed,
+                                             reservation.Room.Capacity,
+                                             (reservation.Leaving - reservation.Arrival).Days);
+
+            this.dbContext.Reservations.Update(reservation);
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteClient(int id, int clientId)
+        {
+            var sanitalizer = new HtmlSanitizer();
+
+            var reservation = this.dbContext.Reservations.Where(r => r.Id == id).Include(r => r.Clients).Include(r => r.Room).FirstOrDefault();
+            var client = clientService.GetClientById(clientId);
+
+            reservation.Clients.Remove(client);
+
+            this.dbContext.Reservations.Update(reservation);
+
+            reservation.Total = AnalyzeTotal(reservation.Clients.Where(c => c.IsAdult).Count(),
+                                             reservation.Clients.Where(c => !c.IsAdult).Count(),
+                                             reservation.Room.PriceForAdultBed,
+                                             reservation.Room.PriceForChildBed,
+                                             reservation.Room.Capacity,
+                                             (reservation.Leaving - reservation.Arrival).Days);
+
+            this.dbContext.Reservations.Update(reservation);
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public List<ReservationClientModel> ClientsForReservationDetails(int Id)
+        {
+            var reservation = this.dbContext.Reservations.Where(r => r.Id == Id).Include(r => r.Clients).FirstOrDefault();
+            return this.dbContext.Clients
+            .Where(c => !reservation.Clients.Contains(c))
+            .Select(c => new ReservationClientModel()
+            {
+                Id = c.Id,
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+                PhoneNumber = c.PhoneNumber,
+                IsAdult = c.IsAdult
+            })
+            .ToList();
+        }
+
+        public bool IsFreeThatTime(DateTime arrival, DateTime leaving, int roomId)
+        {
+            var reservations = this.dbContext.Reservations.Where(r => r.RoomNumberId == roomId);
+
+            return reservations.Any(r => (r.Arrival < arrival && r.Leaving < arrival) || (r.Arrival > leaving && r.Leaving > leaving));
+        }
     }
 }

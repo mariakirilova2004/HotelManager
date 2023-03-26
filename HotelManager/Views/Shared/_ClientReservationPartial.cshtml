@@ -1,0 +1,20 @@
+﻿@using HotelManager.Core.Extensions
+@using HotelManager.Core.Models.Client
+@using HotelManager.Extensions
+@model ClientViewModel;
+
+
+<div class="d-flex justify-content-between mb-3">
+    <h5 class="mb-0">@Model.FirstName @Model.LastName</h5>
+    @if (Model.IsAdult)
+    {
+        <div class="ps-2">
+            <small class="fa fa-star text-primary"></small>
+        </div>
+    }
+</div>
+<div class="d-flex mb-3">
+    <small class="border-end me-3 pe-3"><i class="fa fa-envelope text-primary me-2"></i>@Model.Email</small>
+    <small class="border-end me-3 pe-3"><i class="fa fa-phone text-primary me-2"></i>@Model.PhoneNumber</small>
+</div>
+

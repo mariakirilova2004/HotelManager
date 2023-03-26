@@ -33,6 +33,8 @@ namespace HotelManager.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult All([FromQuery] AllRoomsQueryModel query)
         {
+            //await roomService.UpdateRooms();
+
             var roomService = this.cache.Get<AllRoomsQueryModel>("RoomsCacheKey");
             if (roomService == null)
             {

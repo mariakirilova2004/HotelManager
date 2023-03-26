@@ -9,8 +9,8 @@ namespace HotelManager.Core.Models.Client
 {
     public class DetailsClientViewModel : ClientViewModel
     {
-        public int ReservationsPerPage { get; set; } = 2;
-        public int CurrentPage { get; init; } = 1;
+        public int ReservationsPerPage { get; set; } = 1;
+        public int CurrentPage { get; set; } = 1;
         public int TotalReservationsCount { get; set; }
 
         public List<ReservationViewModel> Reservations = new List<ReservationViewModel>();
