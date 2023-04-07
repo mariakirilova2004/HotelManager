@@ -257,7 +257,7 @@ namespace HotelManager.Core.Services.Reservation
         public List<ReservationClientModel> ClientsForReservationDetails(int Id)
         {
             var reservation = this.dbContext.Reservations.Where(r => r.Id == Id).Include(r => r.Clients).FirstOrDefault();
-            return this.dbContext.Clients
+            var clients = this.dbContext.Clients
             .Where(c => !reservation.Clients.Contains(c))
             .Select(c => new ReservationClientModel()
             {
@@ -268,11 +268,15 @@ namespace HotelManager.Core.Services.Reservation
                 IsAdult = c.IsAdult
             })
             .ToList();
+
+            return clients;
         }
 
         public bool IsFreeThatTime(DateTime arrival, DateTime leaving, int roomId)
         {
             var reservations = this.dbContext.Reservations.Where(r => r.RoomNumberId == roomId);
+
+            if (reservations.Count() == 0) return true;
 
             return reservations.Any(r => (r.Arrival < arrival && r.Leaving < arrival) || (r.Arrival > leaving && r.Leaving > leaving));
         }

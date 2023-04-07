@@ -7,7 +7,10 @@
         <div class="text-center">
             <h6 class="section-title text-center text-primary text-uppercase">Our Reservations</h6>
             <h1 class="mb-5">Explore Our <span class="text-primary text-uppercase">Reservations</span></h1>
-            <a class="btn btn-primary bg-dark" asp-area="" asp-controller="Reservation" asp-action="Add" class="dropdown-item">Add New Reservation</a>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a class="btn btn-primary bg-dark" asp-area="" asp-controller="Reservation" asp-action="Add" class="dropdown-item">Add New Reservation</a>
+            }
         </div>
         <form style="margin: 50px">
             <div class="row">
@@ -97,7 +100,7 @@
                 @foreach (var reservation in @Model.Reservations)
                 {
                     <div class="col-lg-4 col-md-6 wow fadeInUp" @*data-wow-delay="0.6s"*@>
-                        <partial name="_ReservationPartial" model="reservation"/>
+                        <partial name="_ReservationPartial" model="reservation" />
                     </div>
                 }
             }

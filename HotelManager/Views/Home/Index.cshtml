@@ -13,7 +13,10 @@
                         <h6 class="section-title text-white text-uppercase mb-3 animated slideInDown">Luxury Living</h6>
                         <h1 class="display-3 text-white mb-4 animated slideInDown">Discover A Brand Luxurious Hotel</h1>
                         <a asp-area="" asp-controller="Room" asp-action="All" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Our Rooms</a>
-                        <a asp-area="" asp-controller="Reservation" asp-action="All" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Our Reservations</a>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a asp-area="" asp-controller="Reservation" asp-action="Add" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Make Reservation</a>
+                        }
                     </div>
                 </div>
             </div>
@@ -23,19 +26,22 @@
                     <div class="p-3" style="max-width: 700px;">
                         <h6 class="section-title text-white text-uppercase mb-3 animated slideInDown">Luxury Living</h6>
                         <h1 class="display-3 text-white mb-4 animated slideInDown">Discover A Brand Luxurious Hotel</h1>
-                        <a asp-area="" asp-controller="Client" asp-action="Add" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Add Client</a>
-                        <a asp-area="" asp-controller="Reservation" asp-action="Add" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Make Reservation</a>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a asp-area="" asp-controller="Client" asp-action="Add" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Add Client</a>
+                            <a asp-area="" asp-controller="Reservation" asp-action="Add" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Make Reservation</a>
+                        }
                     </div>
                 </div>
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel"
-            data-bs-slide="prev">
+                data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
         <button class="carousel-control-next" type="button" data-bs-target="#header-carousel"
-            data-bs-slide="next">
+                data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
